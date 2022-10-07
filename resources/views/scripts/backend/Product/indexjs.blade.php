@@ -9,7 +9,7 @@
         columns: [
             {
                 render: function(data, type, full, meta) {
-                    return full.id;
+                    return meta.row + 1;
                 }
             },
             {
@@ -53,7 +53,7 @@
             },
             {
                 render: function(data, type, full, meta) {
-                    return full.discount;
+                    return full.discount != null ? full.discount.name : '--';
                 }
             },
             {

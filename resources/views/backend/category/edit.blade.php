@@ -21,6 +21,21 @@
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="mb-1">
+                                            <label class="form-label" for="first-name-column">Parent Category</label>
+                                            <select name="parent_id" class="form-control select2">
+                                                <option value="" selected> Parent Category</option>
+                                                @foreach ($parents as $parent)
+                                                    <option value="{{ $parent->id }}" {{$category->parent_id == $parent->id ? 'selected' : ''}}>{{ $parent->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('brand')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-12">
+                                        <div class="mb-1">
                                             <label class="form-label" for="first-name-column">Name</label>
                                             <input type="text" id="first-name-column" class="form-control"
                                                 placeholder="Name" name="name" value="{{$category->name ?? ''}}">

@@ -14,8 +14,8 @@
     <!-- BEGIN Vendor JS-->
 
     <!-- BEGIN: Page Vendor JS-->
-    {{-- <script src="{{asset('backend/app-assets/vendors/js/charts/apexcharts.min.js')}}"></script> --}}
-    <script src="{{asset('backend/app-assets/vendors/js/extensions/toastr.min.js')}}"></script>
+    <script src="{{asset('backend/app-assets/vendors/js/charts/apexcharts.min.js')}}"></script>
+    {{-- <script src="{{asset('backend/app-assets/vendors/js/extensions/toastr.min.js')}}"></script> --}}
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Theme JS-->
@@ -82,8 +82,9 @@
                 dataType: 'json',
                 success: function(data) {
                     if(data.status == true){
-                        $(elementId).fadeOut();
-                        alertNotification('success',data.title,data.message)
+                        console.log(data.message)
+                        alertNotification('success','Product',data.message)
+
                     }
                 }
             });
@@ -98,9 +99,10 @@
                 timeOut: 10000,
             });
         }
+
         setTimeout(function(){
             $(".alert").remove()
-        },1600)
+        },3000)
 
 
         FilePond.registerPlugin(
@@ -113,5 +115,11 @@
 
         // Select the file input and use create() to turn it into a pond
         FilePond.create(document.querySelector('.filepond'));
+
+
+        // Define function to capitalize the first letter of a string
+        function capitalizeFirstLetter(string){
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
 
     </script>

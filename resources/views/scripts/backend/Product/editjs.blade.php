@@ -1,15 +1,17 @@
 <script>
     var categories = @json($categories);
 
-    var subcategory_id = {{$product->subcategory_id}}
-    var category_id = {{$product->category_id}}
+    var subcategory_id = {{$product->subcategory_id ?? 0}};
+    var category_id = {{$product->category_id}};
+
     var images = @json($product->decode_images)
 
     $("#category").on('change', function(){
         var subcat = categories.filter(item => item.parent_id == this.value);
+        $("#subcategory").empty();
         var html = '<option value="" selected>Select Subcategory</option>';
         $.each(subcat , function(index, val) {
-            html += '<option value="'+val.id+'" '+subcategory_id == val.id ? "selected" : ""+'>'+val.name+'</option>'
+            html += `<option value="${val.id}" ${subcategory_id == val.id ? 'selected' : ''}>${val.name}</option>`
         });
 
         $("#subcategory").html(html)

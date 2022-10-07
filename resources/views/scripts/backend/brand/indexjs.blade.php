@@ -9,7 +9,7 @@
         columns: [
             {
                 render: function(data, type, full, meta) {
-                    return full.id;
+                    return meta.row + 1;
                 }
             },
             {
@@ -55,7 +55,7 @@
                                             </svg>
                                             <span>Edit</span>
                                         </a>
-                                        <a class="dropdown-item w-100" type="button" onclick="sendAjaxOnDelete('brand/${(full.id != null ? full.id : '-')}','GET',${full.id},'#brand-${full.id}')">
+                                        <a class="dropdown-item w-100 delete-record" type="button" onclick="sendAjaxOnDelete('brand/${(full.id != null ? full.id : '-')}/destroy','GET',${full.id},'#brand-${full.id}')">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                 width="14" height="14"
                                                 viewBox="0 0 24 24" fill="none"
@@ -156,5 +156,10 @@
                 next: '&nbsp;'
             }
         },
+    });
+
+    // Delete Record
+    $('.datatable tbody').on('click', '.delete-record', function () {
+        tt.row($(this).parents('tr')).remove().draw();
     });
 </script>

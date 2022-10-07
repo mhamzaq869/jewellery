@@ -10,7 +10,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $appends = ['photo','admin_product_price','decode_size','decode_images'];
+    protected $appends = ['photo','photo_2','short_description','admin_product_price','decode_size','decode_images'];
 
      /**
      * The attributes that are mass assignable.
@@ -26,27 +26,41 @@ class Product extends Model
         'subcategory_id',
         'unit_price',
         'price',
-        'discount',
+        'discount_id',
         'quantity',
         'condition',
         'size',
         'description',
         'status',
         'is_featured',
-        'shipping',
-        'shipping_days',
+        'shipping_id',
         'return',
         'return_days',
-        'tax',
-        'tax_type',
+        'tax_id',
     ];
 
+
+    /**
+     * Relationships
+     *
+     */
+    public function cart(){
+        return $this->hasMany(Cart::class);
+    }
     public function category(){
         return $this->belongsTo(Category::class,'category_id','id');
     }
 
     public function subcategory(){
         return $this->hasOne(Category::class,'id','subcategory_id');
+    }
+
+    public function shipping(){
+        return $this->belongsTo(Shipping::class);
+    }
+
+    public function discount(){
+        return $this->belongsTo(Discount::class);
     }
 
     public function user()
@@ -88,6 +102,25 @@ class Product extends Model
         }else{
             return '';
         }
+    }
+
+    public function getPhoto2Attribute()
+    {
+        $images = json_decode($this->images);
+        if(count($images) > 0){
+            if(count($images) > 1){
+                return $images[1];
+            }else{
+                return $images[0];
+            }
+        }else{
+            return '';
+        }
+    }
+
+    public function getShortDescriptionAttribute()
+    {
+        return substr($this->description,0,500).'...';
     }
 
     public function getDecodeSizeAttribute()

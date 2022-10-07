@@ -29,19 +29,16 @@
                                 <h6 class="card-title mb-0">Shipping Configuration</h6>
                             </div>
                             <div class="card-body">
-                                <div class="form-check form-check-inline mt-1">
-                                    <input class="form-check-input shipping_check" type="radio" name="shipping" id="Free" value="0" {{$product->shipping == 0 ? 'checked' : ''}}>
-                                    <label class="form-check-label" for="Free">Free Shipping</label>
-                                </div>
-                                <br>
-
-                                <div class="form-check form-check-inline mt-1">
-                                    <input class="form-check-input shipping_check" type="radio" name="shipping"  value="flat_shipping" {{$product->shipping > 0 ? 'checked' : ''}}>
-                                    <label class="form-check-label" for="flat_shipping_check">Flat Shipping</label>
-                                </div>
-
-                                <div class="mt-1">
-                                    <input type="number" name="shipping" id="flat_shipping" class="form-control {{$product->shipping > 0 ? '' : 'd-none'}}" min="1" value="1">
+                                <div class="mb-1">
+                                    <select name="shipping_id" class="select2 form-select">
+                                        <option value="" selected>Shipping</option>
+                                        @foreach ($shippings as $shipping)
+                                            <option value="{{ $shipping->id }}" {{$shipping->id == $product->shipping_id ? 'selected' : ''}}>{{ $shipping->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('shipping_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                             </div>
@@ -49,16 +46,23 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="card-title mb-0">Estimate Shipping Time</h6>
+                                <h6 class="card-title mb-0">Vat &amp; TAX</h6>
                             </div>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="est_shipping_days" class="col-sm-4 col-form-label">Days</label>
-                                    <input type="text" class="form-control" id="est_shipping_days" name="shipping_days" placeholder="Estimated shipping days" value="{{$product->shipping_days ?? ''}}">
+
+                                <div class="mb-1">
+                                    <select name="tax_id" class="select2 form-select">
+                                        <option value="" selected>Tax</option>
+                                        @foreach ($taxes as $tax)
+                                            <option value="{{ $tax->id }}" {{$tax->id == $product->tax_id ? 'selected' : ''}}>{{ $tax->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('tax_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="card">
                             <div class="card-header">
@@ -76,24 +80,7 @@
                         </div>
 
 
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="card-title mb-0">Vat &amp; TAX</h6>
-                            </div>
-                            <div class="card-body">
 
-                                <div class="mb-1">
-                                    <select name="tax_type" id="tax_type" class="select2 form-select">
-                                        <option value="amount" {{$product->tax_type == 'amount' ? 'selected' : ''}}>Flat</option>
-                                        <option value="percent" {{$product->tax_type == 'percent' ? 'selected' : ''}}>Percent</option>
-
-                                    </select>
-                                </div>
-
-                                <input type="text" class="form-control" id="tax" name="tax" placeholder="Tax" value="{{$product->tax ?? ''}}">
-
-                            </div>
-                        </div>
                     </div>
 
 
@@ -116,7 +103,7 @@
                                         <div class="col-6">
                                             <div class="mb-1">
                                                 <label class="form-label" for="first-name-column">Category</label>
-                                                <select name="category_id" id="category" class="select2 form-select">
+                                                <select name="category_id" id="category" class="select2 form-select" required>
                                                     <option value="" selected>Category</option>
                                                     @foreach ($parent_categories as $parent)
                                                         <option value="{{ $parent->id }}" {{$product->category_id == $parent->id ? 'selected' : ''}}>{{ $parent->name }}</option>
@@ -130,7 +117,7 @@
                                         <div class="col-6">
                                             <div class="mb-1">
                                                 <label class="form-label" for="first-name-column">Sub Category</label>
-                                                <select name="subcategory_id" id="subcategory" class="select2 form-select">
+                                                <select name="subcategory_id" id="subcategory" class="select2 form-select" required>
                                                     <option value="" selected>Sub Category</option>
                                                 </select>
                                             </div>
@@ -152,7 +139,15 @@
                                         <div class="col-6">
                                             <div class="mb-1">
                                                 <label class="form-label" for="first-name-column">Discount (USD)</label>
-                                                <input type="number" id="first-name-column" class="form-control" name="discount" value="{{$product->discount ?? ''}}">
+                                                <select name="discount_id" class="select2 form-select">
+                                                    <option value="" selected>Discount</option>
+                                                    @foreach ($discounts as $discount)
+                                                        <option value="{{ $discount->id }}" {{$product->discount_id == $discount->id ? 'selected' : ''}}>{{ $discount->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('discount_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-6">

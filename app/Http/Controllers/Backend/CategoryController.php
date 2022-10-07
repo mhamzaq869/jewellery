@@ -20,7 +20,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('parent')->get();
+        $categories = Category::with('parent')->get()->toArray();
         return view('backend.category.index', get_defined_vars());
     }
 
@@ -82,6 +82,8 @@ class CategoryController extends Controller
     {
         $brands = Brand::all();
         $category = Category::find($id);
+        $parents = Category::all();
+
         return view('backend.category.edit', get_defined_vars());
     }
 

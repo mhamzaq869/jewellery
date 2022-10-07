@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Discount;
 use App\Models\Product;
+use App\Models\Shipping;
+use App\Models\Tax;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +24,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['category','subcategory'])->get()->toArray();
+        $products = Product::with(['category','subcategory','discount'])->get()->toArray();
         return view('backend.product.index', get_defined_vars());
     }
 
@@ -34,6 +37,9 @@ class ProductController extends Controller
     {
         $parent_categories = Category::where('parent_id',null)->get();
         $categories = Category::all();
+        $discounts = Discount::where('status',1)->get();
+        $shippings = Shipping::where('status',1)->get();
+        $taxes = Tax::where('status',1)->get();
 
         return view('backend.product.create', get_defined_vars());
     }
@@ -101,6 +107,9 @@ class ProductController extends Controller
         $parent_categories = Category::where('parent_id',null)->get();
         $categories = Category::all();
         $product = Product::find($id);
+        $discounts = Discount::where('status',1)->get();
+        $shippings = Shipping::where('status',1)->get();
+        $taxes = Tax::where('status',1)->get();
 
         return view('backend.product.edit', get_defined_vars());
     }

@@ -60,13 +60,13 @@
                 <i data-feather='bold'></i><span class="menu-title text-truncate"
                 data-i18n="Invoice">Brands</span></a>
                 <ul class="menu-content">
-                    <li><a class="d-flex align-items-center" href="{{route('brand.create')}}"><i
-                                data-feather="circle"></i><span class="menu-item text-truncate"
-                                data-i18n="List">Add New</span></a>
-                    </li>
                     <li><a class="d-flex align-items-center" href="{{route('brand.index')}}"><i
                         data-feather="circle"></i><span class="menu-item text-truncate"
                         data-i18n="List">All Brands</span></a>
+                    </li>
+                    <li><a class="d-flex align-items-center" href="{{route('brand.create')}}"><i
+                                data-feather="circle"></i><span class="menu-item text-truncate"
+                                data-i18n="List">Add New</span></a>
                     </li>
                 </ul>
             </li>
@@ -74,13 +74,13 @@
                 <i data-feather='server'></i><span class="menu-title text-truncate"
                 data-i18n="Categories">Categories</span></a>
                 <ul class="menu-content">
-                    <li><a class="d-flex align-items-center" href="{{route('category.create')}}"><i
-                                data-feather="circle"></i><span class="menu-item text-truncate"
-                                data-i18n="List">Add New</span></a>
-                    </li>
                     <li><a class="d-flex align-items-center" href="{{route('category.index')}}"><i
                         data-feather="circle"></i><span class="menu-item text-truncate"
                         data-i18n="List">All Categories</span></a>
+                    </li>
+                    <li><a class="d-flex align-items-center" href="{{route('category.create')}}"><i
+                                data-feather="circle"></i><span class="menu-item text-truncate"
+                                data-i18n="List">Add New</span></a>
                     </li>
                 </ul>
             </li>
@@ -93,13 +93,13 @@
                 <i data-feather='shopping-bag'></i><span class="menu-title text-truncate"
                         data-i18n="Card">Products</span></a>
                 <ul class="menu-content">
+                    <li><a class="d-flex align-items-center" href="{{route('product.index')}}"><i
+                        data-feather="circle"></i><span class="menu-item text-truncate"
+                        data-i18n="Advance">All Products</span></a>
+                    </li>
                     <li><a class="d-flex align-items-center" href="{{route('product.create')}}"><i
                                 data-feather="circle"></i><span class="menu-item text-truncate"
                                 data-i18n="Basic">Add New</span></a>
-                    </li>
-                    <li><a class="d-flex align-items-center" href="{{route('product.index')}}"><i
-                                data-feather="circle"></i><span class="menu-item text-truncate"
-                                data-i18n="Advance">All Products</span></a>
                     </li>
 
                 </ul>
@@ -108,31 +108,59 @@
                 <i data-feather='archive'></i><span class="menu-title text-truncate"
                 data-i18n="Categories">Shippings</span></a>
                 <ul class="menu-content">
-                    <li><a class="d-flex align-items-center" href="app-invoice-list.html"><i
+                    <li><a class="d-flex align-items-center" href="{{route('shipping.index')}}"><i
                                 data-feather="circle"></i><span class="menu-item text-truncate"
-                                data-i18n="List">Add New</span></a>
+                                data-i18n="List">All Shipping</span></a>
                     </li>
-                    <li><a class="d-flex align-items-center" href="app-invoice-list.html"><i
+                    <li><a class="d-flex align-items-center" href="{{route('shipping.create')}}"><i
                         data-feather="circle"></i><span class="menu-item text-truncate"
-                        data-i18n="List">All Shipping</span></a>
+                        data-i18n="List">Add New</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+                <i data-feather='tag'></i><span class="menu-title text-truncate"
+                data-i18n="Categories">Coupons</span></a>
+                <ul class="menu-content">
+                    <li><a class="d-flex align-items-center" href="{{route('coupon.index')}}"><i
+                                data-feather="circle"></i><span class="menu-item text-truncate"
+                                data-i18n="List">All Coupons</span></a>
+                    </li>
+                    <li><a class="d-flex align-items-center" href="{{route('coupon.create')}}"><i
+                        data-feather="circle"></i><span class="menu-item text-truncate"
+                        data-i18n="List">Add New</span></a>
                     </li>
                 </ul>
             </li>
             <li class=" nav-item"><a class="d-flex align-items-center" href="#">
                 <i data-feather='percent'></i><span class="menu-title text-truncate"
-                data-i18n="Categories">Coupons</span></a>
+                data-i18n="Categories">Discounts</span></a>
                 <ul class="menu-content">
-                    <li><a class="d-flex align-items-center" href="app-invoice-list.html"><i
+                    <li><a class="d-flex align-items-center" href="{{route('discount.index')}}"><i
                                 data-feather="circle"></i><span class="menu-item text-truncate"
-                                data-i18n="List">Add New</span></a>
+                                data-i18n="List">All Discounts</span></a>
                     </li>
-                    <li><a class="d-flex align-items-center" href="app-invoice-list.html"><i
+                    <li><a class="d-flex align-items-center" href="{{route('discount.create')}}"><i
                         data-feather="circle"></i><span class="menu-item text-truncate"
-                        data-i18n="List">All Coupon</span></a>
+                        data-i18n="List">Add New</span></a>
                     </li>
                 </ul>
             </li>
             <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+                <i data-feather='clipboard'></i><span class="menu-title text-truncate"
+                data-i18n="Categories">Taxes</span></a>
+                <ul class="menu-content">
+                    <li><a class="d-flex align-items-center" href="{{route('tax.index')}}"><i
+                                data-feather="circle"></i><span class="menu-item text-truncate"
+                                data-i18n="List">All Taxes</span></a>
+                    </li>
+                    <li><a class="d-flex align-items-center" href="{{route('tax.create')}}"><i
+                        data-feather="circle"></i><span class="menu-item text-truncate"
+                        data-i18n="List">Add New</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{route('review.index')}}">
                 <i data-feather='star'></i><span class="menu-title text-truncate"
                         data-i18n="Card">Product Reviews</span></a>
 
