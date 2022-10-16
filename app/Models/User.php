@@ -48,9 +48,18 @@ class User extends Authenticatable
     ];
 
 
-
+    /**
+     * Relationships
+     *
+     */
     public function product()
     {
         return $this->hasMany(Product::class);
     }
+
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
 }

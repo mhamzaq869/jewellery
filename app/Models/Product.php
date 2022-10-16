@@ -10,7 +10,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $appends = ['photo','photo_2','short_description','admin_product_price','decode_size','decode_images'];
+    protected $appends = ['photo','photo_2','short_description','total_price','admin_product_price','discount','discount_type','shipping','shipping_type','tax','tax_type','decode_size','decode_images'];
 
      /**
      * The attributes that are mass assignable.
@@ -22,6 +22,7 @@ class Product extends Model
         'title',
         'slug',
         'images',
+        'brand_id',
         'category_id',
         'subcategory_id',
         'unit_price',
@@ -44,22 +45,24 @@ class Product extends Model
      * Relationships
      *
      */
-    public function cart(){
-        return $this->hasMany(Cart::class);
-    }
-    public function category(){
+
+    public function category()
+    {
         return $this->belongsTo(Category::class,'category_id','id');
     }
 
-    public function subcategory(){
+    public function subcategory()
+    {
         return $this->hasOne(Category::class,'id','subcategory_id');
     }
 
-    public function shipping(){
+    public function shipping()
+    {
         return $this->belongsTo(Shipping::class);
     }
 
     public function discount(){
+
         return $this->belongsTo(Discount::class);
     }
 
@@ -67,6 +70,21 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function related()
+    {
+        return $this->hasMany(Product::class,'subcategory_id','subcategory_id')->where('status',1)->orderBy('id','DESC')->limit(8);
+    }
+
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
 
 
      /**
@@ -79,14 +97,128 @@ class Product extends Model
         return number_format($price,2);
     }
 
+    public function getTotalPriceAttribute()
+    {
+        //Shipping Cost
+        if($this->shipping != null){
+            $total_price = $this->price + $this->shipping;
+        }
+
+        //Discount Cost
+        if($this->discount != null){
+            if($this->discount_type == 1){
+                $total_price = $this->price - $this->discount;
+            }else{
+                $total_price = $this->price - ($this->price*$this->discount/100);
+            }
+        }
+
+
+        //tax Cost
+        if($this->tax != null){
+            if($this->tax_type == 1){
+                $total_price = $this->price + $this->tax;
+            }else{
+                $total_price = $this->price + ($this->price*$this->tax/100);
+            }
+        }
+
+        return number_format($total_price,2);
+    }
+
+
     public function getUnitPriceAttribute($unit_price)
     {
         return number_format($unit_price,2);
     }
 
-    public function getDiscountAttribute($discount)
+    public function getDiscountAttribute()
     {
-        return number_format($discount,2);
+        if($this->discount_id != null || $this->discount_id != 0){
+            $discount = DB::table('discounts')->where('id',$this->discount_id)->first();
+            if($discount != null){
+                if($discount->type == 1){
+                    return number_format($discount->amount,2);
+                }else{
+                    return number_format($this->price*$discount->amount/100,2);
+                }
+
+            }else{
+                return number_format(0,2);
+            }
+        }else{
+            return number_format(0,2);
+        }
+    }
+
+    public function getDiscountTypeAttribute()
+    {
+        if($this->discount_id != null || $this->discount_id != 0){
+            $data = DB::table('discounts')->where('id',$this->discount_id)->first();
+            if($data != null){
+                return $data->type;
+            }else{
+                return null;
+            }
+        }else{
+                return null;
+        }
+    }
+
+    public function getShippingAttribute()
+    {
+        if($this->shipping_id != null || $this->shipping_id != 0){
+            $shipping = DB::table('shippings')->where('id',$this->shipping_id)->first();
+            if($shipping != null){
+                return number_format($shipping->amount,2);
+            }else{
+                return number_format(0,2);
+            }
+        }else{
+            return number_format(0,2);
+        }
+    }
+
+    public function getShippingTypeAttribute()
+    {
+        if($this->shipping_id != null || $this->shipping_id != 0){
+            $data = DB::table('shippings')->where('id',$this->shipping_id)->first();
+            if($data != null){
+                return $data->type;
+            }else{
+                return null;
+            }
+        }else{
+                return null;
+        }
+    }
+
+    public function getTaxAttribute()
+    {
+        if($this->tax_id != null || $this->tax_id != 0){
+            $tax = DB::table('taxes')->where('id',$this->tax_id)->first();
+            if($tax != null){
+                return number_format($tax->amount,2);
+            }else{
+                return number_format(0,2);
+            }
+        }else{
+            return number_format(0,2);
+        }
+    }
+
+    public function getTaxTypeAttribute()
+    {
+        if($this->tax_id != null || $this->tax_id != 0){
+            $data = DB::table('taxes')->where('id',$this->tax_id)->first();
+            if($data != null){
+                return $data->type;
+            }else{
+                return null;
+            }
+        }else{
+                return null;
+        }
     }
 
     public function getAdminProductPriceAttribute()

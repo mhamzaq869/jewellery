@@ -1,5 +1,5 @@
 <!-- FOOTER -->
-<footer class="bg-dark bg-cover " style="background-image: url(assets/img/patterns/pattern-2.svg)">
+<footer class="bg-dark bg-cover " style="background-image: url({{asset('img/patterns/pattern-2.svg')}})">
     <div class="py-12 border-bottom border-gray-700">
         <div class="container">
             <div class="row justify-content-center">
@@ -69,16 +69,16 @@
                     <!-- Links -->
                     <ul class="list-unstyled mb-7 mb-sm-0">
                         <li>
-                            <a class="text-gray-300" href="contact-us.html">Contact Us</a>
+                            <a class="text-gray-300" href="{{route('contact')}}">Contact Us</a>
                         </li>
                         <li>
-                            <a class="text-gray-300" href="faq.html">FAQs</a>
+                            <a class="text-gray-300" href="{{route('faq')}}">FAQs</a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="text-gray-300" data-bs-toggle="modal" href="#modalSizeChart">Size Guide</a>
-                        </li>
+                        </li> --}}
                         <li>
-                            <a class="text-gray-300" href="shipping-and-returns.html">Shipping & Returns</a>
+                            <a class="text-gray-300" href="{{route('shipping.returns')}}">Shipping & Returns</a>
                         </li>
                     </ul>
 
@@ -117,16 +117,16 @@
                     <!-- Links -->
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a class="text-gray-300" href="about.html">Our Story</a>
+                            <a class="text-gray-300" href="{{route('about')}}">Our Story</a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="text-gray-300" href="#!">Careers</a>
+                        </li> --}}
+                        <li>
+                            <a class="text-gray-300" href="{{route('terms.condition')}}">Terms & Conditions</a>
                         </li>
                         <li>
-                            <a class="text-gray-300" href="#!">Terms & Conditions</a>
-                        </li>
-                        <li>
-                            <a class="text-gray-300" href="#!">Privacy & Cookie policy</a>
+                            <a class="text-gray-300" href="{{route('privacy.policy')}}">Privacy & Cookie policy</a>
                         </li>
                     </ul>
 
@@ -169,12 +169,12 @@
                 <div class="col-auto">
 
                     <!-- Payment methods -->
-                    <img class="footer-payment" src="assets/img/payment/mastercard.svg" alt="...">
-                    <img class="footer-payment" src="assets/img/payment/visa.svg" alt="...">
-                    <img class="footer-payment" src="assets/img/payment/amex.svg" alt="...">
-                    <img class="footer-payment" src="assets/img/payment/paypal.svg" alt="...">
-                    <img class="footer-payment" src="assets/img/payment/maestro.svg" alt="...">
-                    <img class="footer-payment" src="assets/img/payment/klarna.svg" alt="...">
+                    <img class="footer-payment" src="{{asset('/img/payment/mastercard.svg')}}" alt="...">
+                    <img class="footer-payment" src="{{asset('/img/payment/visa.svg')}}" alt="...">
+                    <img class="footer-payment" src="{{asset('/img/payment/amex.svg')}}" alt="...">
+                    <img class="footer-payment" src="{{asset('/img/payment/paypal.svg')}}" alt="...">
+                    <img class="footer-payment" src="{{asset('/img/payment/maestro.svg')}}" alt="...">
+                    <img class="footer-payment" src="{{asset('/img/payment/klarna.svg')}}" alt="...">
 
                 </div>
             </div>
@@ -193,7 +193,17 @@
 <script src="{{ asset('js/theme.bundle.js') }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="{{asset('backend/app-assets/vendors/js/extensions/toastr.min.js')}}"></script>
+<script src="https://js.pusher.com/7.0.2/pusher.min.js"></script>
+<script type="text/javascript">
+    var pusher = new Pusher("{{ pusherCredentials('key') }}", {
+        cluster: "{{ pusherCredentials('cluster') }}",
+    });
+    // Enter a unique channel you wish your users to be subscribed in.
+    var channel = pusher.subscribe('order.' + `{{ Auth::id() }}`);
 
+</script>
+
+@stack('script')
 <script>
     var root = "{{asset('')}}" //domain name with http|https
     //Product Detail modal
@@ -205,7 +215,7 @@
             success: function(response) {
                 if(response.status == true){
                     var data = response.data
-                    var size = ''
+                    var size = '<span class="size-error d-none text-danger small font-weight-bold"><b>You must select product size</b></span><br>'
                     $(".modalImage").attr('src',root+data.photo);
                     $(".modalLink").attr('href',root+'product/'+data.slug);
                     $(".modalTitle").text(capitalizeFirstLetter(data.title));
@@ -214,20 +224,19 @@
                     $(".product_id").val(data.id);
                     $(".modalDetail").html(data.short_description);
                     $.each(data.decode_size,function(index,item){
-                        size += `<div class="form-check form-check-inline form-check-size mb-2">
-                                    <input type="radio" class="form-check-input" name="modalProductSize" id="modalProductSize${index}" value="${item}" data-toggle="form-caption" >
+                        size += `<div class="form-check form-check-inline form-check-size mb-2 border-color">
+                                    <input type="radio" class="form-check-input size" name="size" id="modalProductSize${index}" value="${item}" >
                                     <label class="form-check-label" for="modalProductSize${index}">${capitalizeFirstLetter(item)}</label>
                                 </div>`
                     });
                     $(".Modalsize").html(size);
-                    $("#modalProduct").modal('show');
-                    alertNotification('success','Product','data.message')
+                    $(".modalProduct").modal('show');
                 }
             }
         });
     }
-    CartProducts()
     //Product show in cart
+    CartProducts()
     function CartProducts(){
         $.ajax({
             type: 'GET',
@@ -258,7 +267,7 @@
                                             <div class="d-flex align-items-center">
 
                                                 <!-- Select -->
-                                                <select class="form-select form-select-xxs w-auto" onchange="cartUpdate(${data.id})">
+                                                <select class="form-select form-select-xxs w-auto" onchange="cartUpdate(this.value,${data.id})">
                                                 <option value="1" ${data.quantity == 1 ? 'selected' : ''}>1</option>
                                                 <option value="2" ${data.quantity == 2 ? 'selected' : ''}>2</option>
                                                 <option value="3" ${data.quantity == 3 ? 'selected' : ''}>3</option>
@@ -268,7 +277,7 @@
                                                 <option value="7" ${data.quantity == 7 ? 'selected' : ''}>7</option>
                                                 <option value="8" ${data.quantity == 8 ? 'selected' : ''}>8</option>
                                                 <option value="9" ${data.quantity == 9 ? 'selected' : ''}>9</option>
-                                                <option value="10" ${data.quantity == 10 ? 'selected' : ''}>30</option>
+                                                <option value="10" ${data.quantity == 10 ? 'selected' : ''}>10</option>
                                                 </select>
 
                                                 <!-- Remove -->
@@ -285,7 +294,7 @@
                     $("#nav_cart_count").attr('data-cart-items',data.length)
                     $("#cart_length").html(data.length)
                     $(".cart-append").html(html)
-                    $(".cart_subtotal").html('$'+response.total.toFixed(2))
+                    $(".cart_subtotal").html('$'+response.subtotal.toFixed(2))
 
                 }
             }
@@ -293,16 +302,63 @@
     }
 
     //Product add to cart
-    function addCart(id){
+    $("#addToCartForm").submit(function(e) {
+        e.preventDefault(); // prevent actual form submit
+
+        if($('input[name=size]:checked').val() == undefined){
+            $('.border-color').addClass('border border-danger')
+            $('.size-error').removeClass('d-none')
+            return false;
+        }else{
+            $('.border-color').removeClass('border border-danger')
+        }
+
+        var form = $(this);
+        var url = form.attr('action'); //get submit url [replace url here if desired]
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes form input
+            success: function(response) {
+                if(response.status == true){
+                    CartProducts();
+                    $(".modalProduct").modal('hide');
+                    $('.size-error').addClass('d-none')
+                    alertNotification('info','Cart',response.message)
+                }else{
+                    alertNotification('error','Cart',response.message)
+                }
+            }
+        });
+    });
+
+    //Product add to cart single
+    function addCartSingle(id){
         $.ajax({
             type: 'GET',
             url: '{{url("add-to-cart-single")}}/'+id,
             dataType: 'json',
             success: function(response) {
                 if(response.status == true){
-
                     CartProducts();
-                    alertNotification('success','Product','data.message')
+                    alertNotification('info','Cart',response.message)
+                }
+            }
+        });
+    }
+
+     //Product Update to cart
+    function cartUpdate(val,id){
+        var value = [val]
+        $.ajax({
+            type: 'POST',
+            url: '{{url("cart/update")}}',
+            data:{_token:"{{csrf_token()}}", quant:value, id:id},
+            dataType: 'json',
+            success: function(response) {
+                if(response.status == true){
+                    CartProducts();
+                    alertNotification('info','Cart',response.message)
                 }
             }
         });
@@ -318,12 +374,30 @@
                 if(response.status == true){
                     $("#cart-"+id).fadeOut();
                     CartProducts();
-                    alertNotification('success','Product','data.message')
+                    alertNotification('info','Cart',response.message)
                 }
             }
         });
     }
 
+    //Product add to cart single
+    function addWishlist(id){
+        $.ajax({
+            type: 'POST',
+            url: '{{route("wishlist.store")}}',
+            data: {
+                _token: "{{csrf_token()}}",
+                id:id
+            },
+            success: function(response) {
+                if(response.status == true){
+                    alertNotification('info','Wishlist',response.message)
+                }else{
+                    alertNotification('error','',response.message)
+                }
+            }
+        });
+    }
     // Define function to capitalize the first letter of a string
     function capitalizeFirstLetter(string){
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -331,12 +405,10 @@
 
     function alertNotification(type, heading, message) {
         toastr[type](message, heading, {
-            positionClass: 'toast-right-center',
-            progressBar: true,
-            showMethod: 'slideDown',
-            hideMethod: 'slideUp',
-            timeOut: 10000,
+            closeButton: true,
+            tapToDismiss: false,
         });
     }
 
 </script>
+

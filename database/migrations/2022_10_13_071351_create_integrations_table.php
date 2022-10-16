@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateColorImagesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateColorImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('color_images', function (Blueprint $table) {
+        Schema::create('integrations', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id');
-            $table->string('path')->nullable();
+            $table->string('name')->nullable();
+            $table->string('image')->nullable();
+            $table->longText('details')->nullable();
+            $table->tinyInteger('is_verified')->default(0);
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreateColorImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('color_images');
+        Schema::dropIfExists('integrations');
     }
-}
+};

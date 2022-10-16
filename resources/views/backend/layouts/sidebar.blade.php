@@ -178,6 +178,22 @@
                 <i data-feather='credit-card'></i><span class="menu-title text-truncate"
                         data-i18n="Card">Transactions</span></a>
             </li>
+
+            <li class=" navigation-header"><span data-i18n="Products">Settings</span><i
+                data-feather="more-horizontal"></i>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+                <i data-feather='settings'></i><span class="menu-title text-truncate"
+                        data-i18n="Card">Setting</span></a>
+                <ul class="menu-content">
+                    <li><a class="d-flex align-items-center" href="{{route('integration.index')}}"><i
+                        data-feather="circle"></i><span class="menu-item text-truncate"
+                        data-i18n="Advance">Integration</span></a>
+                    </li>
+
+
+                </ul>
+            </li>
         </ul>
     </div>
 </div>

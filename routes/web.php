@@ -8,12 +8,19 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\CouponController;
 use App\Http\Controllers\Backend\DiscountController;
+use App\Http\Controllers\Backend\IntegrationController;
 use App\Http\Controllers\Backend\ReviewController;
 use App\Http\Controllers\Backend\ShippingController;
 use App\Http\Controllers\Backend\TaxController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\User\AddressController;
+use App\Http\Controllers\User\OrderController as UserOrderController;
+use App\Http\Controllers\User\PaymentMethodController;
+use App\Http\Controllers\User\ProfileController as UserProfileController;
+use App\Http\Controllers\User\WishlistController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -27,8 +34,6 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-
-Auth::routes();
 
 /*
 |--------------------------------------------------------------------------
@@ -76,14 +81,60 @@ Route::group(['prefix' => 'admin','middleware' => ['auth','admin']], function() 
     Route::resource('tax', TaxController::class);
     Route::get('/tax/{id}/destroy',[TaxController::class,'destroy'])->name('tax.destroy');
 
-
     /** review */
     Route::get('review', [ReviewController::class,'index'])->name('review.index');
     Route::get('/review/{id}/destroy',[ReviewController::class,'destroy'])->name('review.destroy');
 
+    /** Setting -> Integrations */
+    Route::resource('integration', IntegrationController::class);
+    Route::get('/integration/{id}/destroy',[IntegrationController::class,'destroy'])->name('integration.destroy');
+
+    /** Notifications */
+    Route::get('/notifications',[NotificationController::class,'index'])->name('notification.index');
+    Route::get('/showNotifications',[NotificationController::class,'show'])->name('show.all.notification');
+    Route::get('/read/notification/{id}',[NotificationController::class,'read'])->name('read.notification');
+    Route::get('/read/all/notifications',[NotificationController::class,'markAllRead'])->name('read.all.notification');
+
 
 });
 
+
+/*
+|--------------------------------------------------------------------------
+| User Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can manage user routes
+|
+*/
+
+/** User Crud Routes */
+Route::group(['prefix' => 'user','middleware' => ['auth','user']], function() {
+    /** Order */
+    Route::get('orders',[UserOrderController::class,'index'])->name('user.orders.index');
+    Route::get('order/{id}',[UserOrderController::class,'show'])->name('user.orders.show');
+    Route::get('order-completed',[UserOrderController::class,'orderCompleted'])->name('user.order.completed');
+    /** Wishlist */
+    Route::resource('wishlist',WishlistController::class);
+
+    /** Profile */
+    Route::resource('profile', UserProfileController::class);
+
+    /** Address */
+    Route::resource('address',AddressController::class);
+
+    /** Payment Methods */
+    Route::resource('payment',PaymentMethodController::class);
+
+    /** Checkout */
+    Route::get('/checkout',[CartController::class,'checkout'])->name('checkout');
+
+    /** Make|Place Order */
+    Route::post('place/order',[CartController::class,'order'])->name('place.order');
+    Route::get('paid/success/{type?}',[CartController::class,'paymentSuccess'])->name('payment.success');
+    Route::get('paid/error/{type?}',[CartController::class,'paymentError'])->name('payment.error');
+
+});
 
 
 /*
@@ -95,22 +146,34 @@ Route::group(['prefix' => 'admin','middleware' => ['auth','admin']], function() 
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Auth::routes();
+
 /** Frontpage | Homepage */
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
+Route::get('/shipping-returns', [HomeController::class, 'shippingReturns'])->name('shipping.returns');
+Route::get('/store-locator', [HomeController::class, 'storeLocator'])->name('store.locator');
+Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy.policy');
+Route::get('/terms-condition', [HomeController::class, 'termsCondition'])->name('terms.condition');
+
 /** Shop Page */
 Route::get('/shop/{cat?}/{sub?}', [ShopController::class, 'index'])->name('shop');
+Route::get('/filter-product-for',[ShopController::class, 'filter_product_for'])->name('filter.product');
 
 /** Product */
 Route::get('/product/{slug}', [ShopController::class, 'productDetail'])->name('product.detail');
 Route::get('/product/{id}/detail/ajax', [ShopController::class, 'productDetailAjax'])->name('product.detail.ajax');
 
 /** Cart */
+Route::get('/cart',[CartController::class,'index'])->name('cart');
 Route::get('/carts',[CartController::class,'show'])->name('carts');
-Route::post('/add-to-cart',[CartController::class,'addToCart'])->name('add-to-cart');
+Route::post('/addToCart',[CartController::class,'addToCart'])->name('add.to.cart');
 Route::get('/add-to-cart-single/{slug?}',[CartController::class,'singleAddToCart'])->name('single-add-to-cart');
-Route::get('cart/{id}/destroy',[CartController::class,'destroy'])->name('cart.delete');
 Route::post('cart/update',[CartController::class,'cartUpdate'])->name('cart.update');
+Route::get('cart/{id}/destroy',[CartController::class,'destroy'])->name('cart.delete');
 
+/** Apply Coupon */
+Route::post('apply/coupon',[CartController::class,'applyCoupon'])->name('apply.coupon');
+Route::get('remove/coupon',[CartController::class,'removeCoupon'])->name('remove.coupon');

@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
          View::composer('*', function ($view) {
            $view->with('menu_categories', DB::table('categories')->whereNull('parent_id')->where('status',1)->get());
+           $view->with('brands', DB::table('brands')->where('status',1)->get());
            $view->with('carts', Cart::with('product')->where('user_id',request()->ip())->get());
         });
     }

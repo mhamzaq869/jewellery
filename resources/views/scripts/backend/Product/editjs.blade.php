@@ -111,7 +111,10 @@
             ['clean']
         ]
         },
-        theme: 'snow'
+        theme: 'snow',
+        imageResize: {
+            displaySize: true
+        },
     });
 
     $("#productForm").on('submit', function(){

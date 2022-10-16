@@ -31,7 +31,7 @@
                             <div class="card-body">
                                 <div class="mb-1">
                                     <select name="shipping_id" class="select2 form-select">
-                                        <option value="" selected>Shipping</option>
+                                        <option value="0" selected>Shipping</option>
                                         @foreach ($shippings as $shipping)
                                             <option value="{{ $shipping->id }}" {{$shipping->id == $product->shipping_id ? 'selected' : ''}}>{{ $shipping->name }}</option>
                                         @endforeach
@@ -52,7 +52,7 @@
 
                                 <div class="mb-1">
                                     <select name="tax_id" class="select2 form-select">
-                                        <option value="" selected>Tax</option>
+                                        <option value="0" selected>Tax</option>
                                         @foreach ($taxes as $tax)
                                             <option value="{{ $tax->id }}" {{$tax->id == $product->tax_id ? 'selected' : ''}}>{{ $tax->name }}</option>
                                         @endforeach
@@ -100,6 +100,20 @@
                                                     placeholder="Enter Product Title" name="title" value="{{$product->title ?? ''}}">
                                             </div>
                                         </div>
+                                        <div class="col-12">
+                                            <div class="mb-1">
+                                                <label class="form-label" for="first-name-column">Brands</label>
+                                                <select name="brand_id" id="brand" class="select2 form-select">
+                                                    <option value="" selected>Brands</option>
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}" {{$product->brand_id == $brand->id ? 'selected' : ''}}>{{ $brand->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('category_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                         <div class="col-6">
                                             <div class="mb-1">
                                                 <label class="form-label" for="first-name-column">Category</label>
@@ -140,7 +154,7 @@
                                             <div class="mb-1">
                                                 <label class="form-label" for="first-name-column">Discount (USD)</label>
                                                 <select name="discount_id" class="select2 form-select">
-                                                    <option value="" selected>Discount</option>
+                                                    <option value="0" selected>Discount</option>
                                                     @foreach ($discounts as $discount)
                                                         <option value="{{ $discount->id }}" {{$product->discount_id == $discount->id ? 'selected' : ''}}>{{ $discount->name }}</option>
                                                     @endforeach

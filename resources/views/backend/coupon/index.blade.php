@@ -44,6 +44,7 @@
             </div>
         </section>
     </div>
+
 @endsection
 
 @push('script')

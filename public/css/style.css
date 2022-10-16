@@ -1,10 +1,11 @@
-.font-9{
-    font-size:9px;
+.font-9 {
+    font-size: 9px;
 }
-.substr p{
+
+.substr p {
     display: block;
     width: 100px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-  }
+}

@@ -98,6 +98,20 @@
                                                     placeholder="Enter Product Title" name="title">
                                             </div>
                                         </div>
+                                        <div class="col-12">
+                                            <div class="mb-1">
+                                                <label class="form-label" for="first-name-column">Brands</label>
+                                                <select name="brand_id" id="brand" class="select2 form-select">
+                                                    <option value="" selected>Brands</option>
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('category_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                         <div class="col-6">
                                             <div class="mb-1">
                                                 <label class="form-label" for="first-name-column">Category</label>
@@ -154,6 +168,7 @@
                                                 <input type="number" id="first-name-column" class="form-control" name="quantity">
                                             </div>
                                         </div>
+
                                         <div class="col-6">
                                             <div class="mb-1">
                                                 <label class="form-label" for="first-name-column">Condition</label>
