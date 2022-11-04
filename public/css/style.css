@@ -1,0 +1,14 @@
+.font-9 {
+    font-size: 9px;
+}
+
+.substr p {
+    display: block;
+    width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.brand-img{
+    max-height: 3.5rem !important;
+}
