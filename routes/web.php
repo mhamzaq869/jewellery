@@ -26,6 +26,7 @@ use App\Http\Controllers\User\OrderController as UserOrderController;
 use App\Http\Controllers\User\PaymentMethodController;
 use App\Http\Controllers\User\ProfileController as UserProfileController;
 use App\Http\Controllers\User\WishlistController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -38,7 +39,10 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('artisan/{type}/{id}',function($type1,$type2){
+    Artisan::all($type1.':'.$type2);
+    return "Your command 'php artisan ".$type1.':'.$type2."' run successfully";
+});
 
 /*
 |--------------------------------------------------------------------------
