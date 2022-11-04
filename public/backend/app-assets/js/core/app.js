@@ -593,142 +593,164 @@ window.colors = {
 
         // condition for bookmark and search input click
         if (bookmarkInput.focus()) {
-          bookmarkSearchList.addClass('show');
+            bookmarkSearchList.addClass('show');
         } else {
-          searchList.addClass('show');
-          bookmarkSearchList.removeClass('show');
+            searchList.addClass('show');
+            bookmarkSearchList.removeClass('show');
         }
+
         if (bookmark === false) {
-          searchList.addClass('show');
-          bookmarkSearchList.removeClass('show');
+            searchList.addClass('show');
+            bookmarkSearchList.removeClass('show');
         }
 
         var $startList = '',
-          $otherList = '',
-          $htmlList = '',
-          $bookmarkhtmlList = '',
-          $pageList =
+            $otherList = '',
+            $htmlList = '',
+            $bookmarkhtmlList = '',
+            $pageListTransaction =
             '<li class="d-flex align-items-center">' +
             '<a href="#">' +
-            '<h6 class="section-label mt-75 mb-0">Pages</h6>' +
+            '<h6 class="section-label mt-75 mb-0">Transaction</h6>' +
             '</a>' +
             '</li>',
-          $activeItemClass = '',
-          $bookmarkIcon = '',
-          $defaultList = '',
-          a = 0;
+            $pageListCustomer =
+            '<li class="d-flex align-items-center">' +
+            '<a href="#">' +
+            '<h6 class="section-label mt-75 mb-0">Customers</h6>' +
+            '</a>' +
+            '</li>',
+            $pageListProducts =
+            '<li class="d-flex align-items-center">' +
+            '<a href="#">' +
+            '<h6 class="section-label mt-75 mb-0">Products</h6>' +
+            '</a>' +
+            '</li>',
+            $pageListOrders =
+            '<li class="d-flex align-items-center">' +
+            '<a href="#">' +
+            '<h6 class="section-label mt-75 mb-0">Orders</h6>' +
+            '</a>' +
+            '</li>',
+            $activeItemClass = '',
+            $bookmarkIcon = '',
+            $defaultList = '',
+            a = 0;
+
 
         // getting json data from file for search results
-        $.getJSON(assetPath + 'data/' + $filename + '.json', function (data) {
-          for (var i = 0; i < data.listItems.length; i++) {
-            // if current is bookmark then give class to star icon
-            // for laravel
-            if ($('body').attr('data-framework') === 'laravel') {
-              data.listItems[i].url = assetPath + data.listItems[i].url;
-            }
+        $.getJSON('/admin/global_search',{ search: value}, function (data) {
+            var not_found = `<li class="auto-suggestion justify-content-between"><a class="d-flex align-items-center justify-content-between w-100 py-50">
+                                <div class="d-flex justify-content-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle me-75"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                    <span>No results found.</span></div></a></li>`
 
-            if (bookmark === true) {
-              activeClass = ''; // resetting active bookmark class
-              var arrList = $('ul.nav.navbar-nav.bookmark-icons li'),
-                $arrList = '';
-              // Loop to check if current seach value match with the bookmarks already there in navbar
-              for (var j = 0; j < arrList.length; j++) {
-                if (data.listItems[i].name === arrList[j].firstChild.dataset.bsOriginalTitle) {
-                  activeClass = ' text-warning';
-                  break;
-                } else {
-                  activeClass = '';
+
+            if (data.transactions.length > 0) {
+                for (var i = 0; i < data.transactions.length; i++) {
+                    if (i == 0) {
+                        $startList += $pageListTransaction
+                    }
+
+                    $startList +=
+                    '<li class="auto-suggestion ' + (i == 0 ?
+                        "current_item" : "") +
+                    '">' +
+                    '<a class="d-flex align-items-center text-primary justify-content-between w-100 cust-search" href="transaction">'+
+                    '<div class="d-flex justify-content-start align-items-center">' +
+                    '<span class="SearchAbleText">' + data.transactions[i]
+                    .first_name + ' ' + data.transactions[i]
+                    .last_name + ' (ID: ' + data.transactions[i].id + ') | ' +
+                    data.transactions[i].order_number + '</span>' +
+                    '</div></a>' +
+                    '</li>';
                 }
-              }
 
-              $bookmarkIcon = feather.icons['star'].toSvg({ class: 'bookmark-icon float-end' + activeClass });
+            } else {
+                $startList += $pageListTransaction
+                $startList += not_found
             }
-            // Search list item start with entered letters and create list
-            if (data.listItems[i].name.toLowerCase().indexOf(value) == 0 && a < 5) {
-              if (a === 0) {
-                $activeItemClass = 'current_item';
-              } else {
-                $activeItemClass = '';
-              }
-              $startList +=
-                '<li class="auto-suggestion ' +
-                $activeItemClass +
-                '">' +
-                '<a class="d-flex align-items-center justify-content-between w-100" href=' +
-                data.listItems[i].url +
-                '>' +
-                '<div class="d-flex justify-content-start align-items-center">' +
-                feather.icons[data.listItems[i].icon].toSvg({ class: 'me-75 ' }) +
-                '<span>' +
-                data.listItems[i].name +
-                '</span>' +
-                '</div>' +
-                $bookmarkIcon +
-                '</a>' +
-                '</li>';
-              a++;
-            }
-          }
-          for (var i = 0; i < data.listItems.length; i++) {
-            if (bookmark === true) {
-              activeClass = ''; // resetting active bookmark class
-              var arrList = $('ul.nav.navbar-nav.bookmark-icons li'),
-                $arrList = '';
-              // Loop to check if current search value match with the bookmarks already there in navbar
-              for (var j = 0; j < arrList.length; j++) {
-                if (data.listItems[i].name === arrList[j].firstChild.dataset.bsOriginalTitle) {
-                  activeClass = ' text-warning';
-                } else {
-                  activeClass = '';
+
+            if (data.orders.length > 0) {
+                for (var i = 0; i < data.orders.length; i++) {
+                    if (i == 0) {
+                        $startList += $pageListOrders
+                    }
+
+                    $startList +=
+                    '<li class="auto-suggestion ' + (i == 0 ?
+                        "current_item" : "") +
+                    '">' +
+                    '<a class="d-flex align-items-center text-primary justify-content-between w-100 cust-search" href="orders">'+
+                    '<div class="d-flex justify-content-start align-items-center">' +
+                    '<span class="SearchAbleText">#'+ data.orders[i].order_number + '(Price: $'+data.orders[i].total +') | ' + data.orders[i]
+                    .first_name + ' ' + data.orders[i]
+                    .last_name + ' (Customer) ' +
+                    '</span>' +
+                    '</div></a>' +
+                    '</li>';
                 }
-              }
 
-              $bookmarkIcon = feather.icons['star'].toSvg({ class: 'bookmark-icon float-end' + activeClass });
+            } else {
+                $startList += $pageListOrders
+                $startList += not_found
             }
-            // Search list item not start with letters and create list
-            if (
-              !(data.listItems[i].name.toLowerCase().indexOf(value) == 0) &&
-              data.listItems[i].name.toLowerCase().indexOf(value) > -1 &&
-              a < 5
-            ) {
-              if (a === 0) {
-                $activeItemClass = 'current_item';
-              } else {
-                $activeItemClass = '';
-              }
-              $otherList +=
-                '<li class="auto-suggestion ' +
-                $activeItemClass +
-                '">' +
-                '<a class="d-flex align-items-center justify-content-between w-100" href=' +
-                data.listItems[i].url +
-                '>' +
-                '<div class="d-flex justify-content-start align-items-center">' +
-                feather.icons[data.listItems[i].icon].toSvg({ class: 'me-75 ' }) +
-                '<span>' +
-                data.listItems[i].name +
-                '</span>' +
-                '</div>' +
-                $bookmarkIcon +
-                '</a>' +
-                '</li>';
-              a++;
+
+            if (data.products.length > 0) {
+                for (var i = 0; i < data.products.length; i++) {
+
+                    if (i == 0) {
+                        $startList += $pageListProducts
+                    }
+
+                    $startList +=
+                        '<li class="auto-suggestion ' + (i == 0 ? "current_item" : "") +'">'+
+                        '<a class="d-flex align-items-center text-primary justify-content-between w-100 sta-search" href="products/'+ data.products[i].id +'/edit">'+
+                        '<div class="d-flex justify-content-start align-items-center">' +
+                        '<span class="ml-2 SearchAbleText" >' + data.products[i].title + ' | $' + data.products[i].price + ' | ' + data.products[i].quantity + '</span>' +
+                        '</div></a>' +
+                        '</li>';
+
+                }
+            } else {
+                $startList += $pageListProducts
+                $startList += not_found
             }
-          }
-          $defaultList = $('.main-search-list-defaultlist').html();
-          if ($startList == '' && $otherList == '') {
-            $otherList = $('.main-search-list-defaultlist-other-list').html();
-          }
-          // concatinating startlist, otherlist, defalutlist with pagelist
-          $htmlList = $pageList.concat($startList, $otherList, $defaultList);
-          $('ul.search-list').html($htmlList);
-          // concatinating otherlist with startlist
-          $bookmarkhtmlList = $startList.concat($otherList);
-          $('ul.search-list-bookmark').html($bookmarkhtmlList);
-          // Feather Icons
-          // if (feather) {
-          //   featherSVG();
-          // }
+
+            if (data.customers.length > 0) {
+                for (var i = 0; i < data.customers.length; i++) {
+
+                    if (i == 0) {
+                        $startList += $pageListCustomer
+                    }
+
+                    $startList +=
+                        '<li class="auto-suggestion ' + (i == 0 ?
+                            "current_item" : "") +
+                        '">' +
+                        '<a class="d-flex align-items-center text-primary justify-content-between w-100 cust-search" href="user/'+ data.customers[i].id +'/edit">'+
+                        '<div class="d-flex justify-content-start align-items-center">' +
+                        '<span class="SearchAbleText">' + data.customers[i]
+                        .first_name + ' ' + data.customers[i]
+                        .last_name + ' (ID: ' + data.customers[i].id + ') | ' +
+                        data.customers[i].email + '</span>' +
+                        '</div></a>' +
+                        '</li>';
+
+                }
+            } else {
+                $startList += $pageListCustomer
+                $startList += not_found
+            }
+
+
+            $('ul.search-list').html($startList);
+
+            $(".SearchAbleText").unmark({
+                done: function() {
+                    $(".SearchAbleText").mark(value);
+                }
+            });
         });
       } else {
         if (bookmark === true) {

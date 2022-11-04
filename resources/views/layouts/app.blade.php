@@ -8,14 +8,14 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $site_setting->name }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('favicon/favicon.ico') }}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{asset($site_setting->favicon)}}" type="image/x-icon" />
 
     <!-- Libs CSS -->
     <link rel="stylesheet" href="{{ asset('css/libs.bundle.css') }}" />
@@ -23,11 +23,8 @@
     <!-- Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/theme.bundle.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('backend/app-assets/vendors/css/extensions/toastr.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('backend/app-assets/css/plugins/extensions/ext-component-toastr.css') }}">
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/app-assets/vendors/css/extensions/toastr.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/app-assets/css/plugins/extensions/ext-component-toastr.css') }}">
 
 
     <style>
@@ -155,18 +152,10 @@
 
         <!-- Body: Form -->
         <div class="offcanvas-body">
-            <form>
-                <div class="form-group">
-                    <label class="visually-hidden" for="modalSearchCategories">Categories:</label>
-                    <select class="form-select" id="modalSearchCategories">
-                        <option selected>All Categories</option>
-                        <option>Women</option>
-                        <option>Men</option>
-                        <option>Kids</option>
-                    </select>
-                </div>
+            <form action="{{route('product.search')}}" method="POST" id="searchProductForm">
+                @csrf
                 <div class="input-group input-group-merge">
-                    <input class="form-control" type="search" placeholder="Search">
+                    <input class="form-control" type="search" name="search" placeholder="Search">
                     <div class="input-group-append">
                         <button class="btn btn-outline-border" type="submit">
                             <i class="fe fe-search"></i>
@@ -177,120 +166,8 @@
         </div>
 
         <!-- Body: Results (add `.d-none` to disable it) -->
-        <div class="offcanvas-body border-top fs-sm">
-
-            <!-- Heading -->
-            <p>Search Results:</p>
-
-            <!-- Items -->
-            <div class="row align-items-center position-relative mb-5">
-                <div class="col-4 col-md-3">
-
-                    <!-- Image -->
-                    <img class="img-fluid" src="{{ asset('img/products/product-5.jpg') }}" alt="...">
-
-                </div>
-                <div class="col position-static">
-
-                    <!-- Text -->
-                    <p class="mb-0 fw-bold">
-                        <a class="stretched-link text-body" href="product.html">Leather mid-heel Sandals</a> <br>
-                        <span class="text-muted">$129.00</span>
-                    </p>
-
-                </div>
-            </div>
-            <div class="row align-items-center position-relative mb-5">
-                <div class="col-4 col-md-3">
-
-                    <!-- Image -->
-                    <img class="img-fluid" src="{{ asset('img/products/product-6.jpg') }}" alt="...">
-
-                </div>
-                <div class="col position-static">
-
-                    <!-- Text -->
-                    <p class="mb-0 fw-bold">
-                        <a class="stretched-link text-body" href="product.html">Cotton floral print Dress</a> <br>
-                        <span class="text-muted">$40.00</span>
-                    </p>
-
-                </div>
-            </div>
-            <div class="row align-items-center position-relative mb-5">
-                <div class="col-4 col-md-3">
-
-                    <!-- Image -->
-                    <img class="img-fluid" src="{{ asset('img/products/product-7.jpg') }}" alt="...">
-
-                </div>
-                <div class="col position-static">
-
-                    <!-- Text -->
-                    <p class="mb-0 fw-bold">
-                        <a class="stretched-link text-body" href="product.html">Leather Sneakers</a> <br>
-                        <span class="text-primary">$85.00</span>
-                    </p>
-
-                </div>
-            </div>
-            <div class="row align-items-center position-relative mb-5">
-                <div class="col-4 col-md-3">
-
-                    <!-- Image -->
-                    <img class="img-fluid" src="{{ asset('img/products/product-8.jpg') }}" alt="...">
-
-                </div>
-                <div class="col position-static">
-
-                    <!-- Text -->
-                    <p class="mb-0 fw-bold">
-                        <a class="stretched-link text-body" href="product.html">Cropped cotton Top</a> <br>
-                        <span class="text-muted">$29.00</span>
-                    </p>
-
-                </div>
-            </div>
-            <div class="row align-items-center position-relative mb-5">
-                <div class="col-4 col-md-3">
-
-                    <!-- Image -->
-                    <img class="img-fluid" src="{{ asset('img/products/product-9.jpg') }}" alt="...">
-
-                </div>
-                <div class="col position-static">
-
-                    <!-- Text -->
-                    <p class="mb-0 fw-bold">
-                        <a class="stretched-link text-body" href="product.html">Floral print midi Dress</a> <br>
-                        <span class="text-muted">$50.00</span>
-                    </p>
-
-                </div>
-            </div>
-
-            <!-- Button -->
-            <a class="btn btn-link px-0 text-reset" href="shop.html">
-                View All <i class="fe fe-arrow-right ms-2"></i>
-            </a>
-
+        <div class="offcanvas-body border-top fs-sm searchReasult">
         </div>
-
-        <!-- Body: Empty (remove `.d-none` to enable it) -->
-        <div class="offcanvas-body d-none">
-
-            <!-- Text -->
-            <p class="mb-3 fs-sm text-center">
-                Nothing matches your search
-            </p>
-
-            <!-- Smiley -->
-            <p class="mb-0 fs-sm text-center">
-                😞
-            </p>
-
-        </div>
-
     </div>
 
     <!-- Shopping Cart -->
@@ -437,22 +314,22 @@
                 <!-- Nav -->
                 <ul class="nav navbar-nav flex-row">
                     <li class="nav-item">
-                        <a class="nav-link text-gray-350" href="#!">
+                        <a class="nav-link text-gray-350" href="{{$site_setting->facebook}}">
                             <i class="fab fa-facebook-f"></i>
                         </a>
                     </li>
                     <li class="nav-item ms-xl-n4">
-                        <a class="nav-link text-gray-350" href="#!">
+                        <a class="nav-link text-gray-350" href="{{$site_setting->twitter}}">
                             <i class="fab fa-twitter"></i>
                         </a>
                     </li>
                     <li class="nav-item ms-xl-n4">
-                        <a class="nav-link text-gray-350" href="#!">
+                        <a class="nav-link text-gray-350" href="{{$site_setting->instagram}}">
                             <i class="fab fa-instagram"></i>
                         </a>
                     </li>
                     <li class="nav-item ms-xl-n4">
-                        <a class="nav-link text-gray-350" href="#!">
+                        <a class="nav-link text-gray-350" href="{{$site_setting->medium}}">
                             <i class="fab fa-medium"></i>
                         </a>
                     </li>
@@ -468,7 +345,8 @@
 
             <!-- Brand -->
             <a class="navbar-brand" href="{{ route('home') }}">
-                Shopper.
+                <img src="{{asset($site_setting->logo)}}" alt="logo" width="55px">
+                <span class="mx-2">{{$site_setting->name}}</span>
             </a>
 
             <!-- Toggler -->
@@ -503,17 +381,12 @@
                                             <nav
                                                 class="nav nav-tabs nav-overflow fs-xs border-bottom border-bottom-lg-0">
                                                 @foreach ($menu_categories as $i => $category)
-                                                    <a class="nav-link text-uppercase {{ $i == 0 ? 'active' : '' }}"
-                                                        data-bs-toggle="tab" href="#{{ $category->name }}">
+                                                    <a class="nav-link text-uppercase {{ $i == 0 ? 'active' : '' }} nav-link-{{ $category->name }}"
+                                                        data-bs-toggle="tab" onmouseover="changeNavTav('{{ $category->name }}')" href="#{{ $category->name }}">
                                                         {{ $category->name }}
                                                     </a>
                                                 @endforeach
-                                                {{-- <a class="nav-link text-uppercase" data-bs-toggle="tab" href="#navTab">
-                          Men
-                        </a>
-                        <a class="nav-link text-uppercase" data-bs-toggle="tab" href="#navTab">
-                          Kids
-                        </a> --}}
+
                                             </nav>
 
                                         </div>
@@ -522,15 +395,17 @@
                             </div>
 
                             <!-- Tab content -->
+
                             <div class="card card-lg">
                                 <div class="card-body">
+                                    @foreach ($menu_categories as $i => $category)
                                     <div class="tab-content">
-                                        <div class="tab-pane fade show active" id="navTab">
+                                        <div class="tab-pane fade  {{ $i == 0 ? 'show active' : '' }}" id="{{ $category->name }}">
                                             <div class="container">
                                                 @if (count($menu_categories) > 0)
                                                     @php
                                                         $sub_categories = \DB::table('categories')
-                                                            ->where('parent_id', $menu_categories[0]->id)
+                                                            ->where('parent_id', $category->id)
                                                             ->where('status', 1)
                                                             ->get();
                                                     @endphp
@@ -541,7 +416,7 @@
                                                                 @foreach ($sub_categories->take(10) as $category)
                                                                     <li class="list-styled-item">
                                                                         <a class="list-styled-link"
-                                                                            href="{{ route('shop', [$menu_categories[0]->name, $category->name]) }}">{{ $category->name }}</a>
+                                                                            href="{{ route('shop', [$menu_categories[$i]->name, $category->name]) }}">{{ $category->name }}</a>
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
@@ -606,8 +481,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endforeach
                                 </div>
                             </div>
+
 
                         </div>
 
@@ -659,6 +536,7 @@
 
     <!-- MODALS -->
     @include('modals.products')
+    @include('modals.waitlist')
     @include('modals.newsletter')
     @include('layouts.footer')
 

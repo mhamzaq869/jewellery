@@ -1,4 +1,6 @@
 <?php
+
+use App\Models\Integration;
 use Illuminate\Support\Facades\File;
 
 if(!function_exists('uploadImage')){
@@ -121,11 +123,12 @@ if(!function_exists('isValidUrl')){
 
 if(!function_exists('pusherCredentials')){
     function pusherCredentials($key){
+        $pusherDb = Integration::where('name','Puser')->first();
         $pusher = [
-                'id' => '1387883',
-                'key' => 'e73e6b100edacfb69dc4',
-                'secret' => '0b750d9e56ccc50e28cd',
-                'cluster' => 'mt1',
+                'id' => $pusherDb->app_id,
+                'key' => $pusherDb->client_id,
+                'secret' => $pusherDb->secret_key,
+                'cluster' => $pusherDb->cluster,
         ];
 
         return $pusher[$key];

@@ -7,10 +7,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $site_setting->name }}</title>
 
     <link rel="apple-touch-icon" href="{{asset('backend/app-assets/images/ico/apple-icon-120.png')}}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{asset('backend/app-assets/images/ico/favicon.ico')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{asset($site_setting->favicon)}}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
 
     <!-- BEGIN: Vendor CSS-->
@@ -24,7 +24,7 @@
     <!-- END: Vendor CSS-->
 
     <!-- BEGIN: Theme CSS-->
-    <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/bootstrap.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/bootstrap.css')}}" media="all">
     <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/bootstrap-extended.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/colors.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/components.css')}}">
@@ -45,6 +45,8 @@
     <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/plugins/charts/chart-apex.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/vendors/css/editors/quill/quill.snow.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/plugins/forms/form-quill-editor.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/pages/app-invoice.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/app-assets/css/pages/app-invoice-print.css')}}">
     <!-- END: Page CSS-->
 
     <!-- BEGIN: Custom CSS-->
@@ -64,6 +66,7 @@
             <source src='{{ asset('backend/assets/sound/message.mp3') }}' type="audio/mpeg">
         </audio>
     </div>
+
     <!-- BEGIN: Header-->
     @include('backend.layouts.navbar')
     <!-- END: Header-->
@@ -73,13 +76,12 @@
     <!-- END: Main Menu-->
 
 
-
     <!-- BEGIN: Content-->
     <div class="app-content content ">
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
         <div class="content-wrapper container-xxl p-0">
-            @if (request()->path() != 'admin/dashboard')
+            @if (request()->path() != 'admin/dashboard' && trim($__env->yieldContent('title')) != '')
             <div class="content-header row">
                 <div class="content-header-left col-md-9 col-12 mb-2">
                     <div class="row breadcrumbs-top">

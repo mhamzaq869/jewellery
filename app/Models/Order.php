@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
     use HasFactory;
+    protected $appends = ['payment_method_image'];
 
     /**
      * The attributes that are mass assignable.
@@ -39,7 +41,15 @@ class Order extends Model
         return $this->hasMany(Cart::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
      /**
      * All Accessor And Mutators
      *
@@ -60,6 +70,15 @@ class Order extends Model
             return json_decode($shipping_address,true);
         }else{
             return array();
+        }
+    }
+    public function getPaymentMethodImageAttribute()
+    {
+        $int = DB::table('integrations')->where('name','Like','%'.$this->payment_method.'%')->first();
+        if($int){
+            return asset('backend/app-assets/images/icons/'.$int->image);
+        }else{
+            return '';
         }
     }
 }

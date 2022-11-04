@@ -9,10 +9,11 @@
                     <h5 class="mb-7 text-center text-white">Want style Ideas and Treats?</h5>
 
                     <!-- Form -->
-                    <form class="mb-11">
+                    <form class="newsletter-inner mb-11" method="POST" action="{{route('subscribe')}}">
+                        @csrf
                         <div class="row gx-5 align-items-start">
                             <div class="col">
-                                <input type="email" class="form-control form-control-gray-700 form-control-lg"
+                                <input type="email" name="email" class="form-control form-control-gray-700 form-control-lg"
                                     placeholder="Enter Email *">
                             </div>
                             <div class="col-auto">
@@ -27,32 +28,34 @@
                 <div class="col-12 col-md-3">
 
                     <!-- Heading -->
-                    <h4 class="mb-6 text-white">Shopper.</h4>
+                    <h4 class="mb-6 text-white">
+                        <img src="{{asset($site_setting->logo)}}" alt="logo" width="55px">
+                    </h4>
 
                     <!-- Social -->
                     <ul class="list-unstyled list-inline mb-7 mb-md-0">
                         <li class="list-inline-item">
-                            <a href="#!" class="text-gray-350">
+                            <a href="{{$site_setting->facebook}}" class="text-gray-350">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
                         </li>
-                        <li class="list-inline-item">
-                            <a href="#!" class="text-gray-350">
+                        {{-- <li class="list-inline-item">
+                            <a href="{{$site_setting->facebook}}" class="text-gray-350">
                                 <i class="fab fa-youtube"></i>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="list-inline-item">
-                            <a href="#!" class="text-gray-350">
+                            <a href="{{$site_setting->twitter}}" class="text-gray-350">
                                 <i class="fab fa-twitter"></i>
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="#!" class="text-gray-350">
+                            <a href="{{$site_setting->instagram}}" class="text-gray-350">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="#!" class="text-gray-350">
+                            <a href="{{$site_setting->medium}}" class="text-gray-350">
                                 <i class="fab fa-medium"></i>
                             </a>
                         </li>
@@ -140,15 +143,16 @@
 
                     <!-- Links -->
                     <ul class="list-unstyled mb-0">
+                        @foreach ($site_setting->decode_contact as $contact)
                         <li>
-                            <a class="text-gray-300" href="#!">1-202-555-0105</a>
+                            <a class="text-gray-300" href="#!">{{$contact}}</a>
                         </li>
+                        @endforeach
+                        @foreach ($site_setting->decode_email as $email)
                         <li>
-                            <a class="text-gray-300" href="#!">1-202-555-0106</a>
+                            <a class="text-gray-300" href="#!">{{$email}}</a>
                         </li>
-                        <li>
-                            <a class="text-gray-300" href="#!">help@shopper.com</a>
-                        </li>
+                        @endforeach
                     </ul>
 
                 </div>
@@ -162,7 +166,7 @@
 
                     <!-- Copyright -->
                     <p class="mb-3 mb-md-0 fs-xxs text-muted">
-                        © 2019 All rights reserved. Designed by Unvab.
+                        © {{date('Y')}} All rights reserved.
                     </p>
 
                 </div>
@@ -219,7 +223,18 @@
                     $(".modalImage").attr('src',root+data.photo);
                     $(".modalLink").attr('href',root+'product/'+data.slug);
                     $(".modalTitle").text(capitalizeFirstLetter(data.title));
-                    $(".modalPrice").text('$'+data.price);
+                    if(data.discount > 0){
+
+                        var price =  `<div class="fw-bold">
+                                        <span class="fs-xs text-gray-350 text-decoration-line-through">$${data.price}</span>
+                                        <span class="text-primary">$${data.price - data.discount}</span>
+                                    </div>`
+                    }else{
+                        var price = `<div class="fw-bold text-muted">
+                                        $${data.price}
+                                    </div>`
+                    }
+                    $(".modalPrice").html(price);
                     $(".modalStock").text(data.quantity > 0 ? '(In Stock)' : '');
                     $(".product_id").val(data.id);
                     $(".modalDetail").html(data.short_description);
@@ -300,6 +315,65 @@
             }
         });
     }
+
+    //Product Search
+    $("#searchProductForm").submit(function(e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var url = form.attr('action'); //get submit url [replace url here if desired]
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes form input
+            success: function(response) {
+                var data = response.data;
+                if(response.status == true){
+                    $html = `<p>Search Results:</p>`;
+
+                    if(data.length > 0){
+                        for($i=0; $i < data.length; $i++){
+                            $html +=`<div class="row align-items-center position-relative mb-5">
+                                        <div class="col-4 col-md-3">
+
+                                            <!-- Image -->
+                                            <img class="img-fluid" src="${root+data[$i].photo}" alt="...">
+
+                                        </div>
+                                        <div class="col position-static">
+
+                                            <!-- Text -->
+                                            <p class="mb-0 fw-bold">
+                                                <a class="stretched-link text-body" href="/product/${data[$i].slug}">${data[$i].title}</a> <br>
+                                                <span class="text-muted">$${data[$i].price}</span>
+                                            </p>
+
+                                        </div>
+                                    </div>`;
+                        }
+
+                        $html += `<a class="btn btn-link px-0 text-reset" href="/shop">
+                                    View All <i class="fe fe-arrow-right ms-2"></i>
+                                </a>`
+                    }else{
+                        $html = `<!-- Text -->
+                                <p class="mb-3 fs-sm text-center">
+                                    Nothing matches your search
+                                </p>
+
+                                <!-- Smiley -->
+                                <p class="mb-0 fs-sm text-center">
+                                    😞
+                                </p>`
+                    }
+
+                    $('.searchReasult').html($html);
+                }else{
+                    alertNotification('error','Search',response.message)
+                }
+            }
+        });
+    });
 
     //Product add to cart
     $("#addToCartForm").submit(function(e) {
@@ -398,16 +472,99 @@
             }
         });
     }
+
+    //Product waitList
+    $("#waitlistForm").on('submit', (function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: "POST",
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                if(data.status == true){
+                    $("#modalWaitList").modal('hide')
+                    alertNotification('info','WaitList',data.message)
+                }else{
+                    alertNotification('error','WaitList',data.message)
+                }
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+    }));
     // Define function to capitalize the first letter of a string
     function capitalizeFirstLetter(string){
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    //Alert Notification Message Popup
     function alertNotification(type, heading, message) {
         toastr[type](message, heading, {
             closeButton: true,
             tapToDismiss: false,
         });
+    }
+
+    //Change Catalog tabs on Hover
+    function changeNavTav(cat){
+        $(`.nav-link`).removeClass('show active');
+        $(`.nav-link-${cat}`).addClass('active');
+
+        $(`.tab-pane`).removeClass('show active');
+        $(`#${cat}`).addClass('show active');
+    }
+
+    //Newsletter Submit Form
+    $(".newsletter-inner").on('submit', (function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: "POST",
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                if(data.status == true){
+                    alertNotification('info','Newsletter',data.message)
+                }else{
+                    alertNotification('error','Newsletter',data.message)
+                }
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+    }));
+
+    // Social Share
+    const facebookButton = document.getElementById('facebook');
+    const pinterestButton = document.getElementById('pinterest');
+    const twitterButton = document.getElementById('twitter');
+
+    facebookButton.addEventListener('click', function() {
+        socialDialog(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`);
+    });
+
+    pinterestButton.addEventListener('click', function() {
+        socialDialog(`http://pinterest.com/pin/create/button/?url=${window.location.href}&media=${window.location.href}`);
+    });
+
+    twitterButton.addEventListener('click', function() {
+        socialDialog(`https://twitter.com/intent/tweet?url=${window.location.href}`);
+    });
+
+    function socialDialog (url, social_dialog){
+        const dialogWidth = 800;
+        const dialogHeight = 600;
+        const dialogTop = ( screen.height - dialogHeight ) / 2;
+        const dialogLeft = ( screen.width - dialogWidth ) / 2;
+        window.open(url, social_dialog, `width=${dialogWidth},height=${dialogHeight},top=${dialogTop},left=${dialogLeft}`);
+        return false;
     }
 
 </script>

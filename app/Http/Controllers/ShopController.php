@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Review;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
@@ -27,6 +30,7 @@ class ShopController extends Controller
         $categories = Category::where('status',1)->where('parent_id',null)->get();
         $category = Category::where(DB::raw('lower(name)'),$cat)->first();
         $subcat = Category::where(DB::raw('lower(name)'),$sub)->first();
+        $shop_banners = Banner::where('type','shop_slider')->where('status',1)->get();
 
         if($cat != null && $sub != null){
             $products = Product::where('status',1);
@@ -42,19 +46,18 @@ class ShopController extends Controller
                 abort(404);
             }
 
-            $products = $products->get();
+            $products = $products->paginate(10);
 
         }elseif($cat != null){
             if($category != null ){
                 $products = Product::where('category_id',$category->id)
-                ->where('status',1)->get();
+                ->where('status',1)->paginate(10);
             }else{
                 abort(404);
             }
 
-
         }else{
-            $products = Product::where('status',1)->get();
+            $products = Product::where('status',1)->paginate(10);
         }
 
         return view('frontend.shop', get_defined_vars());
@@ -172,7 +175,8 @@ class ShopController extends Controller
 
             $response['status'] = true;
             $response['code'] = 200;
-            $response['data'] = $arr->with(['category','subcategory'])->where('status',1)->take(20)->get();
+            $response['result'] = $arr->with(['category','subcategory'])->where('status',1)->paginate(10);
+            $response['more_data'] = $arr->count();
 
             return response($response);
 
@@ -194,6 +198,8 @@ class ShopController extends Controller
     {
         try{
             $product = Product::with(['category','subcategory'])->where('slug',$slug)->where('status',1)->first();
+            $reviews = Review::with('user')->where('product_id',$product->id)->where('status',1)->paginate(10);
+
             return view('frontend.product_detail', get_defined_vars());
         }catch(Exception $e){
             return redirect()->back()->with('error',$e->getMessage());
@@ -221,6 +227,56 @@ class ShopController extends Controller
             $response['status'] = false;
             $response['code'] = 500;
             $response['data'] = $e->getMessage();
+
+            return response($response);
+        }
+    }
+
+    /**
+     * Return response of Product .
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function productReview(Request $request)
+    {
+        try{
+           Review::create($request->all());
+           return redirect()->back()->with('success','Thank you for reaching out and providing us with valuable feedback.');
+
+        }catch(Exception $e){
+            return redirect()->back()->with('error',$e->getMessage());
+        }
+    }
+
+    /**
+     * Return response of Product .
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function productSearch(Request $request)
+    {
+        try{
+            if($request->search != null){
+                $products = Product::where('products.title', 'like', '%' . $request->search . '%')
+                ->orwhere('products.price', 'like', '%' . $request->search . '%')
+                ->orWhereNot('products.status', 0)
+                ->orderBy('products.id', 'DESC')
+                ->take(10)->get();
+
+            }else{
+                $products = [];
+            }
+
+            $response['status'] = true;
+            $response['code'] = 200;
+            $response['data'] = $products;
+
+            return response($response);
+
+        }catch(Exception $e){
+
+            $response['code'] = 500;
+            $response['message'] = $e->getMessage();
 
             return response($response);
         }

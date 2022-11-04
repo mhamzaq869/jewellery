@@ -30,60 +30,66 @@
                                             </ul>
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="homeIcon" aria-labelledby="homeIcon-tab" role="tabpanel">
-
-                                                        <table class="allReviews table table-responsive">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>#</th>
-                                                                    <th>Product</th>
-                                                                    <th>Title</th>
-                                                                    <th>Category</th>
-                                                                    <th>Sub Category</th>
-                                                                    <th>Unit Price</th>
-                                                                    <th>Price</th>
-                                                                    <th>Discount</th>
-                                                                    <th>Quantity</th>
-                                                                    <th>Featured</th>
-                                                                    <th>Status</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
+                                                    <table class="datatable table table-responsive">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Product</th>
+                                                                <th>Product Title</th>
+                                                                <th>Customer</th>
+                                                                <th>Email</th>
+                                                                <th>Review Title</th>
+                                                                <th>Rating</th>
+                                                                <th>Review</th>
+                                                                <th>Status</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                                 <div class="tab-pane" id="profileIcon" aria-labelledby="profileIcon-tab" role="tabpanel">
-                                                    <p>
-                                                        Dragée jujubes caramels tootsie roll gummies gummies icing bonbon. Candy jujubes cake cotton candy.
-                                                        Jelly-o lollipop oat cake marshmallow fruitcake candy canes toffee. Jelly oat cake pudding jelly beans
-                                                        brownie lemon drops ice cream halvah muffin. Brownie candy tiramisu macaroon tootsie roll danish.
-                                                    </p>
-                                                    <p>
-                                                        Croissant pie cheesecake sweet roll. Gummi bears cotton candy tart jelly-o caramels apple pie jelly
-                                                        danish marshmallow. Icing caramels lollipop topping. Bear claw powder sesame snaps.
-                                                    </p>
-                                                </div>
-                                                <div class="tab-pane" id="disabledIcon" aria-labelledby="disabledIcon-tab" role="tabpanel">
-                                                    <p>
-                                                        Chocolate croissant cupcake croissant jelly donut. Cheesecake toffee apple pie chocolate bar biscuit
-                                                        tart croissant. Lemon drops danish cookie. Oat cake macaroon icing tart lollipop cookie sweet bear claw.
-                                                    </p>
+                                                    <table class="pending-datatable table table-responsive">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Product</th>
+                                                                <th>Product Title</th>
+                                                                <th>Customer</th>
+                                                                <th>Email</th>
+                                                                <th>Review Title</th>
+                                                                <th>Rating</th>
+                                                                <th>Review</th>
+                                                                <th>Status</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                                 <div class="tab-pane" id="aboutIcon" aria-labelledby="aboutIcon-tab" role="tabpanel">
-                                                    <p>
-                                                        Gingerbread cake cheesecake lollipop topping bonbon chocolate sesame snaps. Dessert macaroon bonbon
-                                                        carrot cake biscuit. Lollipop lemon drops cake gingerbread liquorice. Sweet gummies dragée. Donut bear
-                                                        claw pie halvah oat cake cotton candy sweet roll. Cotton candy sweet roll donut ice cream.
-                                                    </p>
-                                                    <p>
-                                                        Halvah bonbon topping halvah ice cream cake candy. Wafer gummi bears chocolate cake topping powder.
-                                                        Sweet marzipan cheesecake jelly-o powder wafer lemon drops lollipop cotton candy.
-                                                    </p>
+                                                    <table class="approve-datatable table table-responsive">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Product</th>
+                                                                <th>Product Title</th>
+                                                                <th>Customer</th>
+                                                                <th>Email</th>
+                                                                <th>Review Title</th>
+                                                                <th>Rating</th>
+                                                                <th>Review</th>
+                                                                <th>Status</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
-
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -100,8 +106,6 @@
     </div>
 @endsection
 
-
-
 @push('script')
-    {{-- @include('scripts.backend.product.indexjs') --}}
+    @include('scripts.backend.review.indexjs')
 @endpush

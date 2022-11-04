@@ -1,3 +1,4 @@
+<script src="https://js.stripe.com/v3/"></script>
 <script>
     $("#saveShipAddress").on('click', function() {
         let parameter = {
@@ -44,29 +45,16 @@
 
     $(".placeorder").click(function() {
         var payment_method = $('input[name="payment"]:checked').val();
-
-        $("#checkoutForm").submit();
+        var payment = $('.payment').map(function() {if($(this).is(':checked')){ return 1}}).get();
+        if(payment.length > 0){
+            if(payment_method == 'Stripe'){
+                const stripe = Stripe("{{$integerations->where('name','Stripe')->first()->client_id}}");
+                stripe.redirectToCheckout({ sessionId: "{{ $session->id }}" });
+            }else{
+                $("#checkoutForm").submit();
+            }
+        }
     });
-
-    // $("#checkoutForm").submit(function(e){
-    //     e.preventDefault(); // prevent actual form submit
-    //     var form = $(this);
-    //     var url = form.attr('action'); //get submit url [replace url here if desired]
-    //     $.ajax({
-    //         type: "POST",
-    //         url: url,
-    //         data: form.serialize(), // serializes form input
-    //         success: function(response){
-    //             if(response.code == 200 && response.status == true)
-    //             {
-
-
-    //             }else{
-    //                 alertNotification('error','',response.message)
-    //             }
-    //         }
-    //     });
-    // });
 
     function googlePay() {
 

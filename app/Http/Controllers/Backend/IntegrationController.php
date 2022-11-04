@@ -16,7 +16,8 @@ class IntegrationController extends Controller
      */
     public function index()
     {
-        $integrations = Integration::all();
+        $integrations = Integration::where('int_type','payment')->get();
+        $other_integrations = Integration::where('int_type','!=','payment')->get();
         return view('backend.setting.integration.index',get_defined_vars());
     }
 
@@ -39,7 +40,6 @@ class IntegrationController extends Controller
     public function store(Request $request)
     {
          try{
-
             $integration = Integration::find($request->id);
             $integration->update($request->except('id'));
 
@@ -96,7 +96,24 @@ class IntegrationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+
+            $integration = Integration::find($id);
+            $integration->update($request->all());
+
+            $response['status'] = true;
+            $response['code'] = 200;
+            $response['message'] = $integration->name.' Integration Updated Successfully!';
+
+            return response($response);
+
+        }catch(Exception $e){
+            $response['status'] = false;
+            $response['code'] = 500;
+            $response['message'] = $e->getMessage();
+
+            return response($response);
+        }
     }
 
     /**

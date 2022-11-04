@@ -296,80 +296,6 @@
 
                         <!-- List group -->
                         <div class="list-group list-group-sm mb-7">
-                            {{-- <div class="list-group-item">
-
-                                <!-- Radio -->
-                                <div class="form-check custom-radio">
-
-                                    <!-- Input -->
-                                    <input class="form-check-input" id="checkoutPaymentCard" name="payment"
-                                        type="radio" data-collapse="show" data-target="#checkoutPaymentCardCollapse">
-
-                                    <!-- Label -->
-                                    <label class="form-check-label fs-sm text-body text-nowrap" for="checkoutPaymentCard">
-                                        Credit Card <img class="ms-2" src="{{asset('img/brands/color/cards.svg')}}"
-                                            alt="...">
-                                    </label>
-
-                                </div>
-
-                            </div>
-                            <div class="list-group-item collapse py-0" id="checkoutPaymentCardCollapse">
-
-                                <!-- Form -->
-                                <div class="row gx-5 py-5">
-                                    <div class="col-12">
-                                        <div class="form-group mb-4">
-                                            <label class="visually-hidden" for="checkoutPaymentCardNumber">Card
-                                                Number</label>
-                                            <input class="form-control form-control-sm" id="checkoutPaymentCardNumber"
-                                                type="text" placeholder="Card Number *" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-group mb-4">
-                                            <label class="visually-hidden" for="checkoutPaymentCardName">Name on
-                                                Card</label>
-                                            <input class="form-control form-control-sm" id="checkoutPaymentCardName"
-                                                type="text" placeholder="Name on Card *" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4">
-                                        <div class="form-group mb-md-0">
-                                            <label class="visually-hidden" for="checkoutPaymentMonth">Month</label>
-                                            <select class="form-select form-select-sm" id="checkoutPaymentMonth">
-                                                <option>January</option>
-                                                <option>February</option>
-                                                <option>March</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4">
-                                        <div class="form-group mb-md-0">
-                                            <label class="visually-hidden" for="checkoutPaymentCardYear">Year</label>
-                                            <select class="form-select form-select-sm" id="checkoutPaymentCardYear">
-                                                <option>2017</option>
-                                                <option>2018</option>
-                                                <option>2019</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4">
-                                        <div class="input-group input-group-merge">
-                                            <input class="form-control form-control-sm" id="checkoutPaymentCardCVV"
-                                                type="text" placeholder="CVV *" required>
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" data-bs-toggle="popover"
-                                                    data-bs-placement="top" data-bs-trigger="hover"
-                                                    data-bs-content="The CVV Number on your credit card or debit card is a 3 digit number on VISA, MasterCard and Discover branded credit and debit cards.">
-                                                    <span><i class="fe fe-help-circle"></i></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div> --}}
 
                             @foreach ($integerations as $integrate)
                             <div class="list-group-item">
@@ -470,7 +396,7 @@
                     </p>
 
                     <!-- Button -->
-                    <button class="btn w-100 btn-dark placeorder" type="submit">
+                    <button class="btn w-100 btn-dark placeorder">
                         Place Order
                     </button>
 
@@ -480,12 +406,12 @@
         </div>
     </section>
 </form>
-<div id="container"></div>
+{{-- <div id="container"></div>
 
 <script async
   src="https://pay.google.com/gp/p/js/pay.js"
   onload="onGooglePayLoaded()"></script>
-    <!-- FEATURES -->
+    <!-- FEATURES --> --}}
     @include('layouts.feature')
 @endsection
 

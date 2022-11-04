@@ -9,10 +9,15 @@ use App\Models\Integration;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Wishlist;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Stripe\Checkout\Session as StripeSession;
+use Stripe\Exception\ApiErrorException;
+use Stripe\Stripe;
 
 class CartController extends Controller
 {
@@ -306,17 +311,20 @@ class CartController extends Controller
             $coupon = Coupon::where('code',$request->code)->first();
 
             if($coupon != null){
-                if($coupon->type == 1){
-                    $price = $coupon->amount;
-                }else{
-                    $price = $carts->sum('total_price') * $coupon->amount/100;
+                if($coupon->where(DB::RAW('DATE(NOW())'), '<=', DB::RAW('DATE(expire_date)'))->first() != null){
+                    if($coupon->type == 1){
+                        $price = $coupon->amount;
+                    }else{
+                        $price = $carts->sum('total_price') * $coupon->amount/100;
+                    }
+
+                    $total_price = $carts->sum('total_price') - $price;
+                    Session::put('total_price',$total_price);
+                    Session::put('coupon_code',$coupon->code);
+
+                    return redirect()->back();
                 }
-
-                $total_price = $carts->sum('total_price') - $price;
-                Session::put('total_price',$total_price);
-                Session::put('coupon_code',$coupon->code);
-
-                return redirect()->back();
+                return redirect()->back()->withErrors(['coupon' => 'This coupon code has been expired!']);
             }else{
                 return redirect()->back()->withErrors(['coupon' => 'This coupon code does not exist!']);
             }
@@ -357,7 +365,7 @@ class CartController extends Controller
             $carts = Cart::with(['product'])->where('order_id',null)->get();
             $billing = Address::where('user_id',Auth::id())->where('is_delivery',1)->first();
             $shipping = Address::where('user_id',Auth::id())->where('is_shipping',1)->first();
-            $integerations = Integration::where('status',1)->get();
+            $integerations = Integration::where('int_type','payment')->where('status',1)->get();
 
 
             if(Session::get('total_price')){
@@ -367,6 +375,61 @@ class CartController extends Controller
                 $subtotal = $carts->sum('price');
                 $total = $carts->sum('total_checkout_price');
             }
+
+
+
+            // Stripe Checkout Session
+            $meta = [];
+            foreach($carts as $i => $cart):
+                $meta[] =  [
+                    'price_data' => [
+                        'currency' => 'usd',
+                        'unit_amount' => $i == 0 ? $cart->price * 100 + $carts->sum('tax') * 100 : $cart->price * 100,
+                        'product_data' => [
+                            'name' => $cart->product->title,
+                        ]
+                    ],
+
+                    'quantity' => $cart->quantity,
+                ];
+            endforeach;
+
+            Stripe::setApiKey($integerations->where('name','Stripe')->first()->secret_key);
+            $session = StripeSession::create([
+                'success_url' => route('payment.success','Stripe'),
+                'cancel_url' => route('payment.error','Stripe'),
+                'shipping_options' => [
+                    [
+                      'shipping_rate_data' => [
+                        'type' => 'fixed_amount',
+                        'fixed_amount' => [
+                          'amount' => $carts->sum('shipping') * 100,
+                          'currency' => 'usd',
+                        ],
+                        'display_name' => 'Shipping Cost',
+                        // Delivers between 5-7 business days
+                        // 'delivery_estimate' => [
+                        //   'minimum' => [
+                        //     'unit' => 'business_day',
+                        //     'value' => 5,
+                        //   ],
+                        //   'maximum' => [
+                        //     'unit' => 'business_day',
+                        //     'value' => 7,
+                        //   ],
+                        // ]
+                      ]
+                    ],
+
+                ],
+                'line_items' => [
+                    $meta
+                ],
+                'automatic_tax' => [
+                    'enabled' => false,
+                ],
+                'mode' => 'payment',
+            ]);
 
             return view('frontend.checkout', get_defined_vars());
         }
@@ -386,9 +449,11 @@ class CartController extends Controller
             $payment = new PaymentController;
             $request->returnUrl = route('payment.success',[$request->payment]);
             $request->cancelUrl = route('payment.error',[$request->payment]);
-            $payment->pay($request);
             session()->put('request', $request->all());
-
+            $payment->pay($request);
+            if($request->payment == 'Stripe'){
+                return redirect()->route('payment.success',$request->payment);
+            }
         }catch(Exception $e){
             return redirect()->back()->with('error',$e->getMessage());
         }
@@ -403,6 +468,7 @@ class CartController extends Controller
     public function paymentSuccess(Request $request,$type=null)
     {
        try{
+
            $data = $request->session()->get('request');
            $data['billing_address'] = json_encode($data['bill']);
            $data['shipping_address'] = json_encode($data['ship']);
@@ -424,7 +490,7 @@ class CartController extends Controller
      */
     public function paymentError()
     {
-        return 'User cancelled the payment.';
+        return view('frontend.order_failed');
     }
 
 }

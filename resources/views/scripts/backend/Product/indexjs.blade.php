@@ -78,6 +78,10 @@
                         return `<span class="badge badge-light-warning">Inactive</span>`
                     }
                 }
+            },{
+                render: function(data, type, full, meta) {
+                    return `<a href="waitlist/${full.id}">${full.waitlist.length}</a>`
+                }
             },
             {
                 render: function(data, type, full, meta) {

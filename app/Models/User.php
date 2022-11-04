@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
+        'photo',
         'email',
         'password',
         'date_of_birth',
@@ -38,6 +40,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
+    /**
+     * Appends Attribute.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'name',
+    ];
     /**
      * The attributes that should be cast.
      *
@@ -57,9 +68,34 @@ class User extends Authenticatable
         return $this->hasMany(Product::class);
     }
 
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function wishlist()
     {
         return $this->hasMany(Wishlist::class);
     }
 
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

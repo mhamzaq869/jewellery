@@ -37,7 +37,8 @@ class PaymentController extends Controller
         }elseif($request->payment == 'Stripe'){
             $this->gateway = Omnipay::create('Stripe');
             $this->gateway->setApiKey($integeration->secret_key);
-            $this->stripeCharge($request);
+            return $this->stripeCharge($request);
+
         }elseif($request->payment == 'Klarna'){
 
         }
@@ -80,16 +81,18 @@ class PaymentController extends Controller
             $response = $this->gateway->purchase(array(
                 'amount' => $request->amount,
                 'currency' => 'USD',
-                'returnUrl' => $request->returnUrl,
-                'cancelUrl' => $request->cancelUrl,
+                'source' => 'tok_visa',
             ))->send();
 
-            if ($response->isRedirect()) {
-                $response->redirect(); // this will automatically forward the customer
-            } else {
-                // not successful
-                return $response->getMessage();
+            // Stripe order is OK, profit!
+            if ($response->isSuccessful()) {
+                return $request->returnUrl;
+            // Stripe thinks order needs additional strep
+            } elseif ($response->isRedirect()) {
+                $response->redirect();
             }
+
+
         } catch(Exception $e) {
             return $e->getMessage();
         }

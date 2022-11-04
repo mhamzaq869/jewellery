@@ -25,14 +25,15 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 col-12 my-1">
+                                    <div class="col-md-6 col-6 mb-1">
+                                        <label class="form-label" for="first-name-column">Type</label>
                                         <select name="type" class="select2 form-select" >
                                             <option value="1">Fixed</option>
                                             <option value="2">Percent</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-md-12 col-12">
+                                    <div class="col-md-6 col-6">
                                         <div class="mb-1">
                                             <label class="form-label" for="first-name-column">Amount (USD)</label>
                                             <input type="number" id="first-name-column" class="form-control"
@@ -40,7 +41,15 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 col-12">
+                                    <div class="col-md-6 col-6">
+                                        <div class="mb-1">
+                                            <label class="form-label" for="first-name-column">Expire Date</label>
+                                            <input type="date" id="expire_date" class="form-control"
+                                                 name="expire_date" >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-6">
                                         <div class="mb-1">
                                             <label class="form-label" for="first-name-column">Status</label>
                                             <select name="status" class="select2 form-select " id="status">

@@ -18,6 +18,7 @@ class CreateCouponsTable extends Migration
             $table->string('code')->unique();
             $table->enum('type',['1','2'])->comment('1-fixed, 2-percent')->default('1');
             $table->integer('amount')->default(0);
+            $table->timestamp('expire_date')->nullable();
             $table->enum('status',['1','0'])->default('0');
             $table->timestamps();
         });

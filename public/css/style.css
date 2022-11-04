@@ -9,3 +9,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.brand-img{
+    max-height: 3.5rem !important;
+}

@@ -2,8 +2,9 @@
     <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item me-auto"><a class="navbar-brand"
-                    href="../../../html/ltr/vertical-menu-template/index.html"><span class="brand-logo">
-                        <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    href="../../../html/ltr/vertical-menu-template/index.html">
+                    <span class="brand-logo">
+                        {{-- <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" height="24">
                             <defs>
                                 <lineargradient id="linearGradient-1" x1="100%" y1="10.5120544%" x2="50%"
@@ -37,8 +38,10 @@
                                     </g>
                                 </g>
                             </g>
-                        </svg></span>
-                    <h2 class="brand-text">Vuexy</h2>
+                        </svg> --}}
+                        <img src="{{asset($site_setting->logo)}}" alt="logo">
+                    </span>
+                    <h2 class="brand-text">{{$site_setting->name}}</h2>
                 </a></li>
             <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pe-0" data-bs-toggle="collapse"><i
                         class="d-block d-xl-none text-primary toggle-icon font-medium-4" data-feather="x"></i><i
@@ -163,18 +166,21 @@
             <li class=" nav-item"><a class="d-flex align-items-center" href="{{route('review.index')}}">
                 <i data-feather='star'></i><span class="menu-title text-truncate"
                         data-i18n="Card">Product Reviews</span></a>
-
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{route('user.index')}}">
+                <i data-feather='user'></i><span class="menu-title text-truncate"
+                        data-i18n="Card">Customer</span></a>
             </li>
 
             <li class=" navigation-header"><span data-i18n="Products">Orders & Transactions</span><i
                 data-feather="more-horizontal"></i>
             </li>
 
-            <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{route('order.index')}}">
                 <i data-feather='shopping-cart'></i><span class="menu-title text-truncate"
                         data-i18n="Card">Orders</span></a>
             </li>
-            <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{route('transaction.index')}}">
                 <i data-feather='credit-card'></i><span class="menu-title text-truncate"
                         data-i18n="Card">Transactions</span></a>
             </li>
@@ -186,11 +192,23 @@
                 <i data-feather='settings'></i><span class="menu-title text-truncate"
                         data-i18n="Card">Setting</span></a>
                 <ul class="menu-content">
+
+                    <li><a class="d-flex align-items-center" href="{{route('admin.setting')}}"><i
+                        data-feather="circle"></i><span class="menu-item text-truncate"
+                        data-i18n="Advance">General</span></a>
+                    </li>
+                    <li><a class="d-flex align-items-center" href="{{route('admin.banner')}}"><i
+                        data-feather="circle"></i><span class="menu-item text-truncate"
+                        data-i18n="Advance">Homepage Banner</span></a>
+                    </li>
+                    <li><a class="d-flex align-items-center" href="{{route('admin.shop.banner')}}"><i
+                        data-feather="circle"></i><span class="menu-item text-truncate"
+                        data-i18n="Advance">Shop Page Banner</span></a>
+                    </li>
                     <li><a class="d-flex align-items-center" href="{{route('integration.index')}}"><i
                         data-feather="circle"></i><span class="menu-item text-truncate"
                         data-i18n="Advance">Integration</span></a>
                     </li>
-
 
                 </ul>
             </li>

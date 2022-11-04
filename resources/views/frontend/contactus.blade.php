@@ -25,17 +25,15 @@
 
                         <!-- Text -->
                         <p class="text-gray-500">
-                            We're available from 10 am - 10 pm EST,
-                            7 days a week.
+                            We're available 7 days a week.
                         </p>
                         <p>
                             <strong>Customer Service:</strong><br>
-                            <a class="text-gray-500" href="tel:60146-389-574">6-146-389-574</a>
+                            @foreach ($site_setting->decode_contact as $contact)
+                            <a class="text-gray-500" href="tel:{{$contact}}">{{$contact}}</a> <br>
+                            @endforeach
                         </p>
-                        <p class="mb-0">
-                            <strong>Careers:</strong><br>
-                            <a class="text-gray-500" href="tel:60146-389-574">6-146-389-574</a>
-                        </p>
+
 
                         <!-- Divider -->
                         <hr>
@@ -47,51 +45,39 @@
 
                         <!-- Text -->
                         <p class="text-gray-500">
-                            Fill out our form and we will contact you
-                            within 24 hours.
+                            Fill out our form and we will contact you.
                         </p>
                         <p>
                             <strong>Customer Service:</strong><br>
-                            <a class="text-gray-500" href="mailto:customer@example.com">customer@example.com</a>
-                        </p>
-                        <p class="mb-0">
-                            <strong>Careers:</strong><br>
-                            <a class="text-gray-500" href="mailto:careers@example.com">careers@example.com</a>
+                            @foreach ($site_setting->decode_email as $email)
+                            <a class="text-gray-500" href="mailto:{{$email}}">{{$email}}</a><br>
+                            @endforeach
                         </p>
 
-                        <!-- Divider -->
-                        <hr>
-
-                        <!-- Heading -->
-                        <h6 class="mb-6">
-                            <i class="fe fe-mail text-primary me-4"></i> Find Us:
-                        </h6>
-
-                        <!-- Text -->
-                        <p class="mb-0 text-gray-500">
-                            Want to visit our Offline Stores?
-                        </p>
-
-                        <!-- Button -->
-                        <p class="mb-0">
-                            <a class="btn btn-link px-0 text-body" href="store-locator.html">
-                                Go to Store Locator <i class="fe fe-arrow-right ms-2"></i>
-                            </a>
-                        </p>
 
                     </aside>
                 </div>
+
                 <div class="col-12 col-md-8">
-
+                    @if (Session::has('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <!-- Text -->
+                        {{Session::get('success')}}
+                        <!-- Button -->
+                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    @endif
                     <!-- Form -->
-                    <form>
-
+                    <form method="post" action="{{route('contact.store')}}" id="contactForm" novalidate="novalidate">
+                        @csrf
                         <!-- Email -->
                         <div class="form-group">
                             <label class="visually-hidden" for="contactName">
                                 Your Name *
                             </label>
-                            <input class="form-control form-control-sm" id="contactName" type="text"
+                            <input class="form-control form-control-sm" name="name" id="contactName" type="text"
                                 placeholder="Your Name *" required>
                         </div>
 
@@ -100,7 +86,7 @@
                             <label class="visually-hidden" for="contactEmail">
                                 Your Email *
                             </label>
-                            <input class="form-control form-control-sm" id="contactEmail" type="email"
+                            <input class="form-control form-control-sm" name="email" id="contactEmail" type="email"
                                 placeholder="Your Email *" required>
                         </div>
 
@@ -109,7 +95,7 @@
                             <label class="visually-hidden" for="contactTitle">
                                 Title *
                             </label>
-                            <input class="form-control form-control-sm" id="contactTitle" type="text"
+                            <input class="form-control form-control-sm" name="subject" id="contactTitle" type="text"
                                 placeholder="Title *" required>
                         </div>
 
@@ -118,11 +104,11 @@
                             <label class="visually-hidden" for="contactMessage">
                                 Message *
                             </label>
-                            <textarea class="form-control form-control-sm" id="contactMessage" rows="5" placeholder="Message *" required></textarea>
+                            <textarea class="form-control form-control-sm" name="message" id="contactMessage" rows="5" placeholder="Message *" required></textarea>
                         </div>
 
                         <!-- Button -->
-                        <button class="btn btn-dark">
+                        <button class="btn btn-dark" type="submit">
                             Send Message
                         </button>
 

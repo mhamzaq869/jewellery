@@ -18,9 +18,16 @@ class Integration extends Model
     protected $fillable = [
         'name',
         'image',
+        'app_id',
         'client_id',
         'secret_key',
+        'cluster',
         'type',
+        'host',
+        'username',
+        'password',
+        'encryption',
+        'port',
         'status',
     ];
 

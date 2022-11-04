@@ -24,7 +24,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['category','subcategory','discount'])->get()->toArray();
+        $products = Product::with(['category','subcategory','discount','waitlist'])->get()->toArray();
         return view('backend.product.index', get_defined_vars());
     }
 

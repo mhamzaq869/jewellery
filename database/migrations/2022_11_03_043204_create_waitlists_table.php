@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create('waitlists', function (Blueprint $table) {
             $table->id();
+            $table->integer('product_id')->nullable();
             $table->string('name')->nullable();
-            $table->text('content')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('waitlists');
     }
 };

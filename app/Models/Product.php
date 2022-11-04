@@ -71,6 +71,16 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function waitlist()
+    {
+        return $this->hasMany(Waitlist::class);
+    }
+
     public function related()
     {
         return $this->hasMany(Product::class,'subcategory_id','subcategory_id')->where('status',1)->orderBy('id','DESC')->limit(8);
@@ -229,8 +239,12 @@ class Product extends Model
     public function getPhotoAttribute()
     {
         $images = json_decode($this->images);
-        if(count($images) > 0){
-            return $images[0];
+        if($images != null){
+            if(count($images) > 0){
+                return $images[0];
+            }else{
+                return '';
+            }
         }else{
             return '';
         }
@@ -266,7 +280,7 @@ class Product extends Model
 
     public function getDecodeImagesAttribute()
     {
-        if($this->size != null){
+        if($this->images != null){
             return json_decode($this->images);
         }else{
             return [];
