@@ -426,20 +426,23 @@
                                         <div class="col-4">
 
                                             <!-- Image -->
-                                            <img src="{{ asset($review->product->photo) }}" alt="..."
-                                                class="img-fluid">
+                                            @if ($review->product != null)
+                                            <img src="{{ asset($review->product->photo) }}" alt="..." class="img-fluid">
+                                            @else
+                                            <img src="{{ asset('img/products/no-image.jpg') }}" alt="..." class="img-fluid">
+                                            @endif
 
                                         </div>
                                         <div class="col-8 ms-n2">
 
                                             <!-- Preheading -->
                                             <a class="fs-xs text-muted" href="shop.html">
-                                                {{$review->product->subcategory->name ?? '--'}}
+                                                {{$review->product->subcategory->name ?? 'Unknown'}}
                                             </a>
 
                                             <!-- Heading -->
-                                            <a class="d-block fw-bold text-body" href="product.html">
-                                                {{$review->product->title ?? '--'}}
+                                            <a class="d-block fw-bold text-body" href="{{($review->product != null ? route('product.detail',[$review->product->slug])  : '#')}}">
+                                                {{$review->product->title ?? 'Unknown'}}
                                             </a>
 
                                             <!-- Rating -->

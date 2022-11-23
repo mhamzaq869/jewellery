@@ -362,7 +362,7 @@ class CartController extends Controller
             return redirect()->route('home');
         }else{
 
-            $carts = Cart::with(['product'])->where('order_id',null)->get();
+            $carts = Cart::with(['product'])->where('user_id',request()->ip())->where('order_id',null)->get();
             $billing = Address::where('user_id',Auth::id())->where('is_delivery',1)->first();
             $shipping = Address::where('user_id',Auth::id())->where('is_shipping',1)->first();
             $integerations = Integration::where('int_type','payment')->where('status',1)->get();
