@@ -436,7 +436,7 @@
                                         <div class="col-8 ms-n2">
 
                                             <!-- Preheading -->
-                                            <a class="fs-xs text-muted" href="shop.html">
+                                            <a class="fs-xs text-muted" href="{{($review->product != null ? route('product.detail',[$review->product->slug])  : '#')}}">
                                                 {{$review->product->subcategory->name ?? 'Unknown'}}
                                             </a>
 
