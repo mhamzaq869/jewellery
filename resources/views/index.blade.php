@@ -429,7 +429,7 @@
                                             @if ($review->product != null)
                                             <img src="{{ asset($review->product->photo) }}" alt="..." class="img-fluid">
                                             @else
-                                            <img src="{{ asset('img/products/no-image.jpg') }}" alt="..." class="img-fluid">
+                                            <img src="{{ asset('img/products/no-image.jpg') }}" alt="no image" class="img-fluid">
                                             @endif
 
                                         </div>
